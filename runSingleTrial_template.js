@@ -100,8 +100,10 @@ function runSingleTrial(
     };
 
     timelineTrialsToPush.push(if_notFull);
+    timelineTrialsToPush.push(cursor_off);
     timelineTrialsToPush.push(prestim);
     timelineTrialsToPush.push(fixation);
     timelineTrialsToPush.push(dispCircle);
+    timelineTrialsToPush.push(cursor_on);
 
 }

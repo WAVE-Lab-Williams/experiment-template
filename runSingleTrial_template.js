@@ -99,6 +99,9 @@ function runSingleTrial(
         }
     };
 
+
+    /*--------------------------- push single trial sequence ---------------------------*/
+
     timelineTrialsToPush.push(if_notFull);
     timelineTrialsToPush.push(cursor_off);
     timelineTrialsToPush.push(prestim);

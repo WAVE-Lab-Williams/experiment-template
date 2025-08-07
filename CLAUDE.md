@@ -13,7 +13,7 @@ The codebase follows a modular structure organized in logical directories:
 - `index.html` - Main entry point that loads all dependencies and runs the experiment
 - `src/js/core/timeline.js` - Core experiment flow and JSPsych initialization 
 - `src/js/core/params.js` - Configuration parameters and variables
-- `src/js/content/instructions.js` - All text content (consent, instructions, debrief)
+- `src/js/core/instructions.js` - All text content (consent, instructions, debrief)
 - `src/js/core/trial.js` - Single trial logic and stimulus presentation
 - `src/js/utils/standard-functions.js` - Utility functions for randomization and URL parsing
 - `src/js/integrations/wave-client.js` - WAVE backend integration
@@ -90,7 +90,6 @@ Due to ES6 module imports, the experiment must be served via HTTP:
 
 4. **File structure**: 
    - Core logic in `src/js/core/`
-   - Content in `src/js/content/`
    - Utilities in `src/js/utils/`
    - WAVE integration in `src/js/integrations/`
 

@@ -8,21 +8,22 @@ This is a JSPsych experiment template for psychology/cognitive science research,
 
 ## Architecture
 
-The codebase follows a modular structure with separate files for different concerns:
+The codebase follows a modular structure organized in logical directories:
 
-- `runexperiment.html` - Main entry point that loads all dependencies and runs the experiment
-- `timelineFlow_template.js` - Core experiment flow and JSPsych initialization 
-- `params_template.js` - Configuration parameters and variables
-- `instructions_template.js` - All text content (consent, instructions, debrief)
-- `runSingleTrial_template.js` - Single trial logic and stimulus presentation
-- `standard_functions.js` - Utility functions for randomization and URL parsing
-- `css/template.css` - Styling
-- `stimuli/` - Image assets organized by experiment variant
+- `index.html` - Main entry point that loads all dependencies and runs the experiment
+- `src/js/core/timeline.js` - Core experiment flow and JSPsych initialization 
+- `src/js/core/params.js` - Configuration parameters and variables
+- `src/js/content/instructions.js` - All text content (consent, instructions, debrief)
+- `src/js/core/trial.js` - Single trial logic and stimulus presentation
+- `src/js/utils/standard-functions.js` - Utility functions for randomization and URL parsing
+- `src/js/integrations/wave-client.js` - WAVE backend integration
+- `src/css/styles.css` - Styling
+- `src/assets/stimuli/circles/` - Image assets organized by stimulus type
 
 ## Key Parameters
 
-Core experiment parameters are defined in `params_template.js`:
-- `stimFolder` - Path to stimulus images
+Core experiment parameters are defined in `src/js/core/params.js`:
+- `stimFolder` - Path to stimulus images (`src/assets/stimuli/circles/`)
 - `PRESTIM_DISP_TIME` - Pre-stimulus display duration (800ms)
 - `FIXATION_DISP_TIME` - Fixation cross duration (500ms)
 - `participantType` - Platform type ('prolific', 'mturk', 'sona')
@@ -39,7 +40,7 @@ The experiment follows this sequence (controlled by boolean flags in params):
 
 ## Trial Structure
 
-Each trial (defined in `runSingleTrial_template.js`) consists of:
+Each trial (defined in `src/js/core/trial.js`) consists of:
 1. Fullscreen check
 2. Cursor hiding
 3. Pre-stimulus display with response prompt
@@ -60,20 +61,37 @@ Worker IDs are captured via URL parameters when available, with manual input as 
 ## Data Collection
 
 ### WAVE Backend Integration
-The template includes WAVE client integration in `wave-client-setup.js` and `timelineFlow_template.js`. Key technical details:
+The template includes WAVE client integration in `src/js/integrations/wave-client.js` and `src/js/core/timeline.js`. Key technical details:
 
-- WAVE client initializes automatically from URL parameters
+- WAVE client initializes automatically from URL parameters (key, experiment_id, participant_id)
 - Data logging happens in JSPsych's `on_trial_finish` callback
-- Experiment schema must be pre-defined in WAVE backend
+- Experiment schema must be pre-defined in WAVE backend before data collection
 - Falls back to local data display if WAVE unavailable
-- See docs/wave-integration.md for user-facing documentation
+- See docs/setup/wave-integration.md for user-facing documentation
 
 ## Testing/Development
 
-To test the experiment:
-1. Open `runexperiment.html` in a web browser
-2. Use browser developer tools to monitor console output
-3. Toggle experiment sections using boolean flags in `params_template.js`
-4. Check stimulus loading by examining the `forPreload` array
+Due to ES6 module imports, the experiment must be served via HTTP:
 
-The experiment uses CDN-hosted JSPsych (v7.3.4) so no local build process is required.
+1. **Setup Node.js environment**:
+   ```bash
+   nvm use              # Uses Node.js 20 LTS from .nvmrc
+   npm install          # Install dependencies
+   npm run dev          # Start development server on port 8080
+   ```
+
+2. **Access experiment**: Open `http://localhost:8080/` in browser
+
+3. **Development workflow**:
+   - Toggle experiment sections using boolean flags in `src/js/core/params.js`
+   - Monitor console output using browser developer tools
+   - Check stimulus loading by examining the `forPreload` array in timeline.js
+   - Use `npm run lint` to check code quality
+
+4. **File structure**: 
+   - Core logic in `src/js/core/`
+   - Content in `src/js/content/`
+   - Utilities in `src/js/utils/`
+   - WAVE integration in `src/js/integrations/`
+
+The experiment uses CDN-hosted JSPsych (v7.3.4) and includes http-server for local development.

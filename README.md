@@ -9,7 +9,8 @@ This experiment template:
 - Collects response times and accuracy data
 - Handles participant consent and demographics
 - Works with common research platforms (Prolific, MTurk, SONA)
-- Automatically saves all data in a structured format
+- Automatically saves all data to WAVE backend system
+- Falls back to local data display for testing
 
 ## Getting Started
 
@@ -17,6 +18,7 @@ This experiment template:
 - A computer with a web browser (Chrome, Firefox, Safari, or Edge)
 - Basic text editing skills
 - Your stimulus images (if different from the provided examples)
+- **WAVE backend access** with experiment schema defined (see [WAVE Integration Guide](docs/wave-integration.md))
 
 ### Quick Start (5 minutes)
 
@@ -24,13 +26,38 @@ This experiment template:
    - Download all files to your computer
    - Keep all files in the same folder structure
 
-2. **Test the basic experiment**
-   - Double-click on `runexperiment.html` to open it in your browser
+2. **Set up Node.js environment**
+   ```bash
+   # Install nvm - follow instructions at:
+   # https://github.com/nvm-sh/nvm
+   
+   # Install and use the project's specified Node.js version
+   nvm use             # This reads .nvmrc and uses Node.js 20 LTS
+   
+   # Install dependencies
+   npm install
+   
+   # Start development server
+   npm run dev
+   ```
+
+3. **Test the basic experiment**
+   - Open `http://localhost:8080/runexperiment.html` in your browser
    - Go through the entire experiment to see how it works
    - This helps you understand what participants will experience
+   - **For production**: Add WAVE URL parameters (see [WAVE Integration Guide](docs/wave-integration.md))
 
-3. **Customize for your study**
+4. **Customize for your study**
    - See the "Customization Guide" section below
+
+### Available Commands
+
+```bash
+npm run dev        # Start development server on localhost:8080
+npm run start      # Same as dev
+npm run lint       # Check JavaScript code quality
+npm run lint:fix   # Automatically fix linting issues
+```
 
 ### Customization Guide
 
@@ -108,5 +135,19 @@ Here's what each file does (you don't need to understand all of this, but it's h
 - `timelineFlow_template.js` - The main experiment logic and flow
 - `runSingleTrial_template.js` - What happens during each trial
 - `standard_functions.js` - Helper functions (rarely needs changes)
+- `wave-client-setup.js` - WAVE backend integration (automatic)
 - `css/template.css` - Visual styling
 - `stimuli/` - Folder for your images
+- `docs/` - Documentation files
+
+## Data Collection
+
+This template uses the WAVE backend system for data collection. **Important**: You must set up your experiment schema in WAVE before collecting data.
+
+📖 **See the [WAVE Integration Guide](docs/wave-integration.md) for complete setup instructions**
+
+## Additional Documentation
+
+- [WAVE Integration Guide](docs/wave-integration.md) - Complete setup and troubleshooting
+- [WAVE Client Repository](https://github.com/WAVE-Lab-Williams/wave-client/) - Client for interfacing with API
+- [WAVE Backend Repository](https://github.com/WAVE-Lab-Williams/wave-backend/) - Full API documentation

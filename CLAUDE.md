@@ -59,12 +59,14 @@ Worker IDs are captured via URL parameters when available, with manual input as 
 
 ## Data Collection
 
-JSPsych automatically logs:
-- Response times and accuracy
-- Trial parameters and stimulus information
-- Participant demographics and debrief responses
-- Fullscreen interaction tracking
-- Screen dimensions and timestamps
+### WAVE Backend Integration
+The template includes WAVE client integration in `wave-client-setup.js` and `timelineFlow_template.js`. Key technical details:
+
+- WAVE client initializes automatically from URL parameters
+- Data logging happens in JSPsych's `on_trial_finish` callback
+- Experiment schema must be pre-defined in WAVE backend
+- Falls back to local data display if WAVE unavailable
+- See docs/wave-integration.md for user-facing documentation
 
 ## Testing/Development
 

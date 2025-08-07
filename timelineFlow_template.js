@@ -31,9 +31,19 @@ var jsPsych = initJsPsych({
     on_trial_finish: function(data) {
         // console.log(JSON.stringify(data));
         data.pNo = workerID;
+        
+        // Process data through WAVE client if available
+        if (window.waveClient) {
+            window.waveClient.processTrialData(data);
+        }
     },
     on_finish: function() {
-        jsPsych.data.displayData();
+        // Handle experiment completion through WAVE client if available
+        if (window.waveClient) {
+            window.waveClient.handleCompletion();
+        } else {
+            jsPsych.data.displayData();
+        }
     },
     on_interaction_data_update: function () {
         var interaction_data = jsPsych.data

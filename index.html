@@ -21,18 +21,21 @@
     <!-- For custom javascript plugins, modified from original jspsych ones -->
 
     <!-- CSS -->
-    <link href = "css/template.css" rel="stylesheet" type="text/css"></link>
-    <!-- jquery -->
+    <link href="src/css/styles.css" rel="stylesheet" type="text/css">
+    <!-- jQuery -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <!--Special JS files-->
-    <script src="standard_functions.js"></script>
-    <script src="params_template.js"></script>
-    <script src="instructions_template.js"></script>
-    <script src="runSingleTrial_template.js"></script>
+    <!-- Core JS files -->
+    <script src="src/js/utils/standard-functions.js"></script>
+    <script src="src/js/core/params.js"></script>
+    <script src="src/js/core/instructions.js"></script>
+    <script src="src/js/core/trial.js"></script>
+
+    <!-- WAVE Client for data logging -->
+    <script type="module" src="src/js/integrations/wave-client.js"></script>
 
 
 </head>
 <body>
-    <script src="timelineFlow_template.js"></script>
+    <script src="src/js/core/timeline.js"></script>
 </body>
 </html>

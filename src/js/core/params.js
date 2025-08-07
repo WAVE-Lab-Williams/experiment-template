@@ -4,7 +4,7 @@ Defining Parameter Variables
 ===============================================================
 */
 
-var stimFolder = 'stimuli/stimuli_DESCRIPTION1_DATE1/'
+var stimFolder = 'src/assets/stimuli/circles/'
 
 var runIntro = true;
 var runInstr = true;

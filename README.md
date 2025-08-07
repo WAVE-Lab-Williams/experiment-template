@@ -18,7 +18,7 @@ This experiment template:
 - A computer with a web browser (Chrome, Firefox, Safari, or Edge)
 - Basic text editing skills
 - Your stimulus images (if different from the provided examples)
-- **WAVE backend access** with experiment schema defined (see [WAVE Integration Guide](docs/wave-integration.md))
+- **WAVE backend access** with experiment schema defined (see [WAVE Integration Guide](docs/setup/wave-integration.md))
 
 ### Quick Start (5 minutes)
 
@@ -42,10 +42,10 @@ This experiment template:
    ```
 
 3. **Test the basic experiment**
-   - Open `http://localhost:8080/runexperiment.html` in your browser
+   - Open `http://localhost:8080/` in your browser
    - Go through the entire experiment to see how it works
    - This helps you understand what participants will experience
-   - **For production**: Add WAVE URL parameters (see [WAVE Integration Guide](docs/wave-integration.md))
+   - **For production**: Add WAVE URL parameters (see [WAVE Integration Guide](docs/setup/wave-integration.md))
 
 4. **Customize for your study**
    - See the "Customization Guide" section below
@@ -62,31 +62,31 @@ npm run lint:fix   # Automatically fix linting issues
 ### Customization Guide
 
 #### Changing Your Stimuli
-1. **Add your images** to the `stimuli/stimuli_DESCRIPTION1_DATE1/` folder
-2. **Update the stimulus folder name** in `params_template.js`:
+1. **Add your images** to the `src/assets/stimuli/circles/` folder
+2. **Update the stimulus folder name** in `src/js/core/params.js`:
    ```javascript
-   var stimFolder = 'stimuli/your-new-folder-name/'
+   var stimFolder = 'src/assets/stimuli/your-folder-name/'
    ```
-3. **Update the stimulus names** in `timelineFlow_template.js` around line 168:
+3. **Update the stimulus names** in `src/js/core/timeline.js` around line 168:
    ```javascript
    var poss_circle_colors = ["your-stim1", "your-stim2"];
    ```
 
 #### Changing Experiment Text
-All text that participants see is in `instructions_template.js`:
+All text that participants see is in `src/js/content/instructions.js`:
 - **Welcome message**: Edit `welcometext` (line 5)
 - **Instructions**: Edit the `instrContent` array (line 48)
 - **Consent form**: Edit `consentForm()` function (line 65)
 - **Debrief questions**: Edit `debriefForm()` function (line 90)
 
 #### Adjusting Timing
-In `params_template.js`, you can change:
+In `src/js/core/params.js`, you can change:
 - `PRESTIM_DISP_TIME`: How long the prompt shows before stimulus (default: 800ms)
 - `FIXATION_DISP_TIME`: How long the fixation cross shows (default: 500ms)
-- Stimulus duration is set in the experiment design (line 169 in `timelineFlow_template.js`)
+- Stimulus duration is set in the experiment design (line 169 in `src/js/core/timeline.js`)
 
 #### Setting Up for Your Platform
-In `params_template.js`, change these settings:
+In `src/js/core/params.js`, change these settings:
 
 **For Prolific:**
 ```javascript
@@ -105,7 +105,7 @@ var participantType = 'sona';
 ```
 
 #### Changing Response Keys
-In `runSingleTrial_template.js`:
+In `src/js/core/trial.js`:
 1. Find line 55: `choices: ['f', 'j']`
 2. Change to your preferred keys: `choices: ['a', 'l']`
 3. Update the prompt text (line 49) to match your new keys
@@ -115,7 +115,7 @@ In `runSingleTrial_template.js`:
 
 After making changes:
 1. **Save all files**
-2. **Refresh** `runexperiment.html` in your browser
+2. **Refresh** your browser at `http://localhost:8080/`
 3. **Run through the entire experiment** to test your changes
 4. **Check the browser console** (press F12) for any error messages
 
@@ -127,27 +127,48 @@ After making changes:
 
 ## File Structure Explained
 
-Here's what each file does (you don't need to understand all of this, but it's helpful to know):
-
-- `runexperiment.html` - The main file that participants open
-- `params_template.js` - All the settings and timing parameters
-- `instructions_template.js` - All text that participants see
-- `timelineFlow_template.js` - The main experiment logic and flow
-- `runSingleTrial_template.js` - What happens during each trial
-- `standard_functions.js` - Helper functions (rarely needs changes)
-- `wave-client-setup.js` - WAVE backend integration (automatic)
-- `css/template.css` - Visual styling
-- `stimuli/` - Folder for your images
-- `docs/` - Documentation files
+```
+experiment-template/
+├── index.html                    # Main experiment file
+├── src/
+│   ├── js/
+│   │   ├── core/                # Core experiment logic
+│   │   │   ├── params.js        # Settings and timing parameters
+│   │   │   ├── timeline.js      # Main experiment flow
+│   │   │   └── trial.js         # Single trial logic
+│   │   ├── content/             # Experiment text content
+│   │   │   └── instructions.js  # All participant-facing text
+│   │   ├── utils/               # Utility functions
+│   │   │   └── standard-functions.js
+│   │   └── integrations/        # External integrations  
+│   │       └── wave-client.js   # WAVE backend integration
+│   ├── css/
+│   │   └── styles.css           # Visual styling
+│   └── assets/
+│       └── stimuli/             # Image assets
+├── docs/                        # Documentation
+└── package.json                 # Node.js dependencies
+```
 
 ## Data Collection
 
 This template uses the WAVE backend system for data collection. **Important**: You must set up your experiment schema in WAVE before collecting data.
 
-📖 **See the [WAVE Integration Guide](docs/wave-integration.md) for complete setup instructions**
+📖 **See the [WAVE Integration Guide](docs/setup/wave-integration.md) for complete setup instructions**
 
 ## Additional Documentation
 
-- [WAVE Integration Guide](docs/wave-integration.md) - Complete setup and troubleshooting
-- [WAVE Client Repository](https://github.com/WAVE-Lab-Williams/wave-client/) - Client for interfacing with API
-- [WAVE Backend Repository](https://github.com/WAVE-Lab-Williams/wave-backend/) - Full API documentation
+### Setup & Configuration
+- [Getting Started Guide](docs/setup/getting-started.md) - Detailed setup instructions
+- [WAVE Integration Guide](docs/setup/wave-integration.md) - Complete WAVE setup and troubleshooting
+
+### Customization  
+- [Customizing Stimuli](docs/customization/stimuli.md) - How to add and modify images
+- [Adjusting Parameters](docs/customization/parameters.md) - Timing, design, and platform settings  
+- [Basic Styling](docs/customization/styling.md) - Simple visual customizations
+
+### Help
+- [Troubleshooting](docs/troubleshooting.md) - Common issues and solutions
+
+### External Resources
+- [WAVE Client Repository](https://github.com/WAVE-Lab-Williams/wave-client/) - Full client documentation

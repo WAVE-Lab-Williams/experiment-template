@@ -14,9 +14,17 @@ This experiment template:
 
 ## Getting Started
 
+### Creating Your Experiment from This Template
+
+1. **Use this template** - Click the green "Use this template" button at the top of this repository
+2. **Create a new repository** - Choose "Create a new repository" 
+3. **Name your experiment** - Give your repository a descriptive name
+4. **Clone your new repository** to your computer
+5. **Follow the setup steps below**
+
 ### Prerequisites
 - A computer with a web browser (Chrome, Firefox, Safari, or Edge)
-- Basic text editing skills
+- Basic text editing skills (preferably in a coding IDE such as VSCode)
 - Your stimulus images (if different from the provided examples)
 - **WAVE backend access** with experiment schema defined (see [WAVE Integration Guide](docs/setup/wave-integration.md))
 

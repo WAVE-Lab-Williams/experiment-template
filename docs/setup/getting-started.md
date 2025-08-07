@@ -30,7 +30,7 @@ npm run dev
 
 - Open `http://localhost:8080/` in your browser
 - Go through the entire experiment to understand the participant experience
-- For production, add WAVE URL parameters (see [WAVE Integration](wave-integration.md))
+- For production, add WAVE URL parameters in the URL (see [WAVE Integration](wave-integration.md))
 
 ### 3. Customize for Your Study
 

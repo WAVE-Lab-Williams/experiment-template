@@ -26,8 +26,10 @@ This JSPsych experiment template has been integrated with the WAVE client for au
 
 ### Step 2: Run your experiment with proper URL
 ```
-runexperiment.html?key=your_api_key&experiment_id=experiment_uuid&participant_id=P001
+http://localhost:8080/?key=your_api_key&experiment_id=experiment_uuid&participant_id=P001
 ```
+
+**Note**: You must use the development server (`npm run dev`) - the experiment cannot be opened directly as a file due to ES6 module imports.
 
 ### Step 3: Data is automatically logged
 The template will automatically log experiment data to WAVE including:
@@ -52,8 +54,19 @@ The template automatically sends these fields to WAVE:
 
 ## Development/Testing
 
-For local testing without WAVE backend:
-- Run without URL parameters
+### Local Server Setup
+Due to ES6 module imports, you must serve the files via HTTP:
+
+```bash
+# Install and start development server
+npm install
+npm run dev
+```
+
+Then open: `http://localhost:8080/`
+
+### Testing Without WAVE Backend:
+- Run without URL parameters (`http://localhost:8080/`)
 - Data will be displayed locally via JSPsych
 - Console will show WAVE integration warnings
 

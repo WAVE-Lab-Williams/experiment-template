@@ -75,9 +75,9 @@ var runClose = true;
 ### Check the Console
 Press F12 in your browser and look at the Console tab for error messages. Common errors:
 
-**"404 Not Found"**: File path is wrong
-**"Uncaught ReferenceError"**: Variable name typo
-**"CORS error"**: Not using development server (use `npm run dev`)
+- **"404 Not Found"**: File path is wrong
+- **"Uncaught ReferenceError"**: Variable name typo
+- **"CORS error"**: Not using development server (use `npm run dev`)
 
 ## Getting Help
 

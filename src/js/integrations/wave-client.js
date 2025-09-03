@@ -101,15 +101,20 @@ function processTrialData(data) {
 
     // Log to WAVE if experiment trial
     if (data.trial_category && data.trial_category.includes('expt')) {
+        // ⚠️ IMPORTANT: Modify these fields to match your experiment's data structure!
+        // The fields below must align with the schema you defined in the WAVE backend.
         const waveData = {
-            trial_number: data.trial_index || 0,
-            trial_type: data.trial_category,
-            stimulus: data.trial_stimulus || data.stimulus,
+            trial_number: data.trial_index,
+            trial_type: data.trial_type,
+            trial_category: data.trial_category,
+            stimulus: data.stimulus,
             response: data.response,
             response_time: data.rt / 1000, // Convert to seconds
             accuracy: data.thisAcc === 1,
             correct_response: data.correct_response,
             stimulus_duration: data.trial_duration,
+            time_elapsed: data.time_elapsed,
+            participant_id: data.participant_id,
             timestamp: data.timestamp,
             user_agent: data.user_agent
         };
@@ -135,6 +140,11 @@ function handleExperimentCompletion() {
         `;
     } else {
         console.log('📊 Data displayed locally only (WAVE not available)');
+        
+        // Log data to console for easy copy/paste
+        const allData = jsPsych.data.get().values();
+        console.log('🔍 All experiment data:', allData);
+        
         // Original JSPsych data display
         jsPsych.data.displayData();
     }

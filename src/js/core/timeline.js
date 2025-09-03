@@ -68,7 +68,9 @@ Introduction Section (*sec_intro)
 
 var welcome = {
     type: jsPsychHtmlButtonResponse,
-    stimulus: welcometext,
+    stimulus: function() {
+        return welcometext();
+    },
     choices: ['Next'],
     data: {
         trial_category: 'welcome',

@@ -2,11 +2,18 @@
  Functions for text: instructions, debrief, consent, and id form entry (*fxtext)
 -------------------------------------------*/
 
-var welcometext =
-    "<div style='display: inline-block; margin: 0 auto; padding: 10px 200px 10px 200px; text-align: left'>" +
-    '<p>Welcome to the experiment.</p><p>Please make sure you are completing the experiment on a LAPTOP or COMPUTER. ' +
-    'You will <b>not</b> be able to complete this experiment on a phone or tablet. </p>' +
-    '</div>';
+var welcometext = function() {
+    let warningText = '';
+    if (window.waveClient && !window.waveClient.enabled()) {
+        warningText = '<p style="color: #d63384; background: #f8d7da; padding: 8px 12px; border: 1px solid #f5c2c7; border-radius: 4px; margin: 10px 0; font-size: 14px;"><strong>⚠️ Data Logging Disabled:</strong> Your responses will not be saved. Please ensure your URL includes the required parameters: <code style="background: rgba(0,0,0,0.1); padding: 1px 3px; font-size: 12px;">https://yoursite.com/experiment?key=YOUR_API_KEY&experiment_id=YOUR_EXPERIMENT_ID&participant_id=PARTICIPANT_ID</code></p>';
+    }
+    
+    return "<div style='display: inline-block; margin: 0 auto; padding: 10px 200px 10px 200px; text-align: left'>" +
+        '<p>Welcome to the experiment.</p><p>Please make sure you are completing the experiment on a LAPTOP or COMPUTER. ' +
+        'You will <b>not</b> be able to complete this experiment on a phone or tablet.</p>' +
+        warningText +
+        '</div>';
+};
 
 function requestIDinput(participantType, workerID) {
     if (participantType == 'sona') {

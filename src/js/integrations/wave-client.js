@@ -37,6 +37,7 @@ const PARTICIPANT_ID = urlParams.get('participant_id');
 let waveClient = null;
 let waveEnabled = false;
 
+
 // Initialize WAVE client
 function initializeWaveClient() {
     console.log('🔍 Initializing WAVE Client...');
@@ -46,8 +47,7 @@ function initializeWaveClient() {
 
     if (!WAVE_API_KEY || !EXPERIMENT_ID || !PARTICIPANT_ID) {
         console.warn('⚠️ WAVE parameters missing. Data will only be displayed locally.');
-        console.warn('Required URL parameters: key, experiment_id, participant_id');
-        console.warn('⚠️ CRITICAL: Experiment schema must be defined in WAVE backend before data collection!');
+        console.warn('Required URL format: https://yoursite.com/experiment?key=YOUR_API_KEY&experiment_id=YOUR_EXPERIMENT_ID&participant_id=PARTICIPANT_ID');
         return false;
     }
 
@@ -126,12 +126,18 @@ function handleExperimentCompletion() {
     
     if (waveEnabled) {
         console.log('✅ All data has been logged to WAVE backend');
+        // Show success message
+        document.body.innerHTML = `
+            <div style="text-align: center; padding: 50px; font-family: Arial, sans-serif;">
+                <h2 style="color: #28a745;">✅ Experiment Complete</h2>
+                <p>Your data has been successfully logged, thank you for participating!</p>
+            </div>
+        `;
     } else {
         console.log('📊 Data displayed locally only (WAVE not available)');
+        // Original JSPsych data display
+        jsPsych.data.displayData();
     }
-    
-    // Original JSPsych data display
-    jsPsych.data.displayData();
 }
 
 // Initialize WAVE client when script loads

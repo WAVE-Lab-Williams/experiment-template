@@ -6,8 +6,8 @@
   "scripts": {
     "dev": "http-server -p 8080 -c-1",
     "start": "npm run dev",
-    "lint": "eslint *.js",
-    "lint:fix": "eslint *.js --fix"
+    "lint": "eslint 'src/**/*.js'",
+    "lint:fix": "eslint 'src/**/*.js' --fix"
   },
   "devDependencies": {
     "http-server": "^14.1.1",

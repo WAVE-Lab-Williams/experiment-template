@@ -2,11 +2,18 @@
  Functions for text: instructions, debrief, consent, and id form entry (*fxtext)
 -------------------------------------------*/
 
-var welcometext =
-    "<div style='display: inline-block; margin: 0 auto; padding: 10px 200px 10px 200px; text-align: left'>" +
-    '<p>Welcome to the experiment.</p><p>Please make sure you are completing the experiment on a LAPTOP or COMPUTER. ' +
-    'You will <b>not</b> be able to complete this experiment on a phone or tablet. </p>' +
-    '</div>';
+var welcometext = function() {
+    let warningText = '';
+    if (window.waveClient && !window.waveClient.enabled()) {
+        warningText = '<p style="color: #d63384; background: #f8d7da; padding: 8px 12px; border: 1px solid #f5c2c7; border-radius: 4px; margin: 10px 0; font-size: 14px;"><strong>⚠️ Data Logging Disabled:</strong> Your responses will not be saved. Please ensure your URL includes the required parameters: <code style="background: rgba(0,0,0,0.1); padding: 1px 3px; font-size: 12px;">https://yoursite.com/experiment?key=YOUR_API_KEY&experiment_id=YOUR_EXPERIMENT_ID&participant_id=PARTICIPANT_ID</code></p>';
+    }
+    
+    return "<div style='display: inline-block; margin: 0 auto; padding: 10px 200px 10px 200px; text-align: left'>" +
+        '<p>Welcome to the experiment.</p><p>Please make sure you are completing the experiment on a LAPTOP or COMPUTER. ' +
+        'You will <b>not</b> be able to complete this experiment on a phone or tablet.</p>' +
+        warningText +
+        '</div>';
+};
 
 function requestIDinput(participantType, workerID) {
     if (participantType == 'sona') {
@@ -72,7 +79,7 @@ function consentForm(participantType) {
             '<h5>COSTS AND COMPENSATION</h5><p>There are no costs associated with participation in this study. You will receive <strong>' +
             String(0.5) +
             ' credits</strong> for participating.</p><h5>CONFIDENTIALITY</h5><p>No personally identifying information will be collected, so your participation will be anonymous. The survey is anonymous. We will not know your name. We will not be able to connect any identifying information to your survey answers. However, we will know your mTurk number in order to pay you for your time. We will keep the information about your participation in this research confidential. Your data will be pooled with those from other participants, and may be included in scientific publications and uploaded to public data repositories.</p>' +
-            '<h5>LEARNING MORE</h5><p>If you have questions about this study, you may contact your experimenter Kimberly Wong at kimberly.wong@yale.edu. If you have questions about your rights as a research participant, or you have complaints about this research, you can contact the Yale Institutional Review Boards at 203-785-4688 or hrpp@yale.edu.</p><h5>INFORMED CONSENT</h5><p>Your participation indicates that you have read and understood this consent form and the information presented and that you agree to be in this study.</p></div></div>';
+            '<h5>LEARNING MORE</h5><p>If you have questions about this study, you may contact your experimenter Kimberly Wong at kww3@williams.com. If you have questions about your rights as a research participant, or you have complaints about this research, you can contact the Yale Institutional Review Boards at 203-785-4688 or hrpp@yale.edu.</p><h5>INFORMED CONSENT</h5><p>Your participation indicates that you have read and understood this consent form and the information presented and that you agree to be in this study.</p></div></div>';
     } else {
         var consentContent =
             "<h5>USE ARROW KEYS TO SCROLL DOWN, AND PRESS 'Y' TO CONSENT.<br>In order to run this study, we need to include the standard consent form below.</h5><h1>Consent for Participation in a Research Study</h1><div style='width: 100%; text-align: center'><div style='display: inline-block; margin: 0 auto; padding: 10px 200px 10px 200px; text-align: left'><h5>STUDY TITLE</h5><p>Perceiving Objects and Events</p>" +
@@ -82,7 +89,7 @@ function consentForm(participantType) {
             '<h5>COSTS AND COMPENSATION</h5><p>There are no costs associated with participation in this study. You will receive <strong>' +
             String(estDollars) +
             " dollars</strong> for participating.</p><h5>CONFIDENTIALITY</h5><p>No personally identifying information will be collected, so your participation will be anonymous. The survey is anonymous. We will not know your name. We will not be able to connect any identifying information to your survey answers. However, (if you are accessing this experiment through mTurk), we will know your mTurk number in order to pay you for your time. Your mTurk number could possibly be connected to your public profile, which could, in theory, be searched. We want to stress that we will not be looking at anyone's public profiles. We will keep the information about your participation in this research confidential. Your data will be pooled with those from other participants, and may be included in scientific publications and uploaded to public data repositories.</p>" +
-            '<h5>LEARNING MORE</h5><p>If you have questions about this study, you may contact your experimenter Kimberly Wong at kimberly.wong@yale.edu. If you have questions about your rights as a research participant, or you have complaints about this research, you can contact the Yale Institutional Review Boards at 203-785-4688 or hrpp@yale.edu.</p><h5>INFORMED CONSENT</h5><p>Your participation indicates that you have read and understood this consent form and the information presented and that you agree to be in this study.</p></div></div>';
+            '<h5>LEARNING MORE</h5><p>If you have questions about this study, you may contact your experimenter Kimberly Wong at kww3@williams.com. If you have questions about your rights as a research participant, or you have complaints about this research, you can contact the Yale Institutional Review Boards at 203-785-4688 or hrpp@yale.edu.</p><h5>INFORMED CONSENT</h5><p>Your participation indicates that you have read and understood this consent form and the information presented and that you agree to be in this study.</p></div></div>';
     }
     return consentContent;
 }
@@ -103,7 +110,7 @@ function debriefForm() {
 
 function closingText(participantType) {
     var base =
-        'Thank you so much for your contribution to science! The experiment has concluded. Please contact kimberly.wong@yale.edu if you have any further questions.';
+        'Thank you so much for your contribution to science! The experiment has concluded. Please contact kww3@williams.com if you have any further questions.';
     var addition = '';
     if (participantType == 'mturk') {
         var rand_code = hitID + String(code) + participantID;

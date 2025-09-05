@@ -68,7 +68,9 @@ Introduction Section (*sec_intro)
 
 var welcome = {
     type: jsPsychHtmlButtonResponse,
-    stimulus: welcometext,
+    stimulus: function() {
+        return welcometext();
+    },
     choices: ['Next'],
     data: {
         trial_category: 'welcome',
@@ -99,11 +101,17 @@ var consent = {
     data: { trial_category: 'consent' },
 };
 
-if (participantType == 'prolific') {
-    var workerID = getURLParameter('PROLIFIC_PID');
-    console.log(workerID);
+// First check for PROLIFIC_PID, then participant_id, then generate random
+var workerID = getURLParameter('PROLIFIC_PID');
+if (workerID === 'no_query') {
+    workerID = getURLParameter('participant_id');
+}
+
+if (workerID !== 'no_query') {
+    console.log('Worker ID captured from URL:', workerID);
 } else {
-    var workerID = 'no_query_worker'+ Math.floor(Math.random() * 90000) + 10000;
+    workerID = 'no_query_worker'+ Math.floor(Math.random() * 90000) + 10000;
+    console.warn('⚠️ No participant ID found in URL - randomly generated:', workerID);
 }
 
 var id = {

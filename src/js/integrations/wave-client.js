@@ -37,6 +37,7 @@ const PARTICIPANT_ID = urlParams.get('participant_id');
 let waveClient = null;
 let waveEnabled = false;
 
+
 // Initialize WAVE client
 function initializeWaveClient() {
     console.log('🔍 Initializing WAVE Client...');
@@ -46,8 +47,7 @@ function initializeWaveClient() {
 
     if (!WAVE_API_KEY || !EXPERIMENT_ID || !PARTICIPANT_ID) {
         console.warn('⚠️ WAVE parameters missing. Data will only be displayed locally.');
-        console.warn('Required URL parameters: key, experiment_id, participant_id');
-        console.warn('⚠️ CRITICAL: Experiment schema must be defined in WAVE backend before data collection!');
+        console.warn('Required URL format: https://yoursite.com/experiment?key=YOUR_API_KEY&experiment_id=YOUR_EXPERIMENT_ID&participant_id=PARTICIPANT_ID');
         return false;
     }
 
@@ -101,15 +101,20 @@ function processTrialData(data) {
 
     // Log to WAVE if experiment trial
     if (data.trial_category && data.trial_category.includes('expt')) {
+        // ⚠️ IMPORTANT: Modify these fields to match your experiment's data structure!
+        // The fields below must align with the schema you defined in the WAVE backend.
         const waveData = {
-            trial_number: data.trial_index || 0,
-            trial_type: data.trial_category,
-            stimulus: data.trial_stimulus || data.stimulus,
+            trial_number: data.trial_index,
+            trial_type: data.trial_type,
+            trial_category: data.trial_category,
+            stimulus: data.stimulus,
             response: data.response,
             response_time: data.rt / 1000, // Convert to seconds
             accuracy: data.thisAcc === 1,
             correct_response: data.correct_response,
             stimulus_duration: data.trial_duration,
+            time_elapsed: data.time_elapsed,
+            participant_id: data.participant_id,
             timestamp: data.timestamp,
             user_agent: data.user_agent
         };
@@ -126,12 +131,23 @@ function handleExperimentCompletion() {
     
     if (waveEnabled) {
         console.log('✅ All data has been logged to WAVE backend');
+        // Show success message
+        document.body.innerHTML = `
+            <div style="text-align: center; padding: 50px; font-family: Arial, sans-serif;">
+                <h2 style="color: #28a745;">✅ Experiment Complete</h2>
+                <p>Your data has been successfully logged, thank you for participating!</p>
+            </div>
+        `;
     } else {
         console.log('📊 Data displayed locally only (WAVE not available)');
+        
+        // Log data to console for easy copy/paste
+        const allData = jsPsych.data.get().values();
+        console.log('🔍 All experiment data:', allData);
+        
+        // Original JSPsych data display
+        jsPsych.data.displayData();
     }
-    
-    // Original JSPsych data display
-    jsPsych.data.displayData();
 }
 
 // Initialize WAVE client when script loads

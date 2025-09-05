@@ -23,6 +23,9 @@ var participantType = 'prolific';
 var completionCode = 'C4MF2IV1';
 var prolific_url = 'https://app.prolific.co/submissions/complete?cc='+completionCode;
 
+// WAVE Backend Configuration
+var waveBackendUrl = 'https://wave-backend-production-8781.up.railway.app';
+// var waveBackendUrl = 'http://localhost:8000';  // For local development
 
 // initializing variables
 var timelinebase = [];

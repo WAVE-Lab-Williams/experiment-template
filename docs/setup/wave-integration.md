@@ -16,6 +16,20 @@ This JSPsych experiment template has been integrated with the WAVE client for au
    - `experiment_id` - The experiment UUID from WAVE backend
    - `participant_id` - Unique identifier for each participant
 
+## Backend Configuration
+
+The WAVE backend URL is configured in `src/js/core/params.js`:
+
+```javascript
+// WAVE Backend Configuration  
+var waveBackendUrl = 'https://wave-backend-production-8781.up.railway.app';
+// var waveBackendUrl = 'http://localhost:8000';  // For local development
+```
+
+To switch between production and development:
+- **Production**: Use the Railway URL (default)
+- **Development**: Comment out production line, uncomment localhost line
+
 ## Quick Start
 
 ### Step 1: Set up your experiment in WAVE backend
@@ -83,7 +97,10 @@ Then open: `http://localhost:8080/`
 - Check URL parameter spelling and format
 
 **Backend connection failed:**
-- Verify WAVE backend is running (default: localhost:8000)  
+- Check the backend URL is correct in `src/js/core/params.js`
+- For production: `waveBackendUrl = 'https://wave-backend-production-8781.up.railway.app'`
+- For local development: `waveBackendUrl = 'http://localhost:8000'`
+- Verify WAVE backend is running and accessible
 - Check network connectivity
 - Verify API key permissions
 

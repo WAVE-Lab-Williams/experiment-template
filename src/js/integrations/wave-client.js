@@ -54,7 +54,7 @@ function initializeWaveClient() {
     try {
         waveClient = new WaveClient({
             apiKey: WAVE_API_KEY,
-            baseUrl: 'http://localhost:8000'  // Default WAVE backend URL
+            baseUrl: waveBackendUrl
         });
 
         // Test connection

@@ -129,9 +129,26 @@ After making changes:
 
 ### Deploying Your Experiment
 
-1. **Upload all files** to your web hosting service (ask your lab manager about this)
-2. **Test the uploaded version** by visiting the URL
-3. **Share the URL** with your research platform (Prolific, MTurk, etc.)
+**Recommended Setup:**
+- Configure your hosting platform to deploy from `release` branch, not `main`
+- Merge to `release` branch only when ready to deploy
+- Keeps development work separate from live experiments
+
+**Pre-Deployment Checklist:**
+1. **Test local logging**: Run experiment locally with WAVE URL parameters, verify data appears in console
+2. **Validate parameters**: Check that JSPsych logged parameters match your experiment configuration in `params.js`
+
+**Deploy Steps:**
+1. **Test the deployed version** by visiting your live URL both without and with full parameters
+- `key=YOUR_API_KEY` (⚠️ **Use experimentee-level API key, NOT researcher-level**)
+- `experiment_id=YOUR_EXPERIMENT_ID` 
+- `participant_id=YOUR_PARTICIPANT_ID`
+2. **Share the URL** with your research platform, making sure that when it is distributed to participants it includes the above parameters:
+   ```
+   https://your-experiment.vercel.app/?key=YOUR_API_KEY&experiment_id=YOUR_EXPERIMENT_ID&participant_id=YOUR_PARTICIPANT_ID
+   ```
+
+Refer to Vercel/Cloudflare Pages/GitHub Pages documentation for platform-specific setup.
 
 ## File Structure Explained
 

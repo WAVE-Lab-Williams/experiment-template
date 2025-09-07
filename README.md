@@ -1,5 +1,8 @@
 # JSPsych Experiment Template
 
+<!-- Generate for downstream repos using https://deploy-badge.vercel.app/vercel -->
+![Vercel Deploy](https://deploy-badge.vercel.app/vercel/experiment-template) 
+
 A user-friendly template for creating online psychology experiments using JSPsych. This template is designed specifically for simple visual perception studies where participants respond to colored stimuli.
 
 ## What This Template Does
@@ -87,12 +90,6 @@ All text that participants see is in `src/js/content/instructions.js`:
 - **Consent form**: Edit `consentForm()` function (line 65)
 - **Debrief questions**: Edit `debriefForm()` function (line 90)
 
-#### Adjusting Timing
-In `src/js/core/params.js`, you can change:
-- `PRESTIM_DISP_TIME`: How long the prompt shows before stimulus (default: 800ms)
-- `FIXATION_DISP_TIME`: How long the fixation cross shows (default: 500ms)
-- Stimulus duration is set in the experiment design (line 169 in `src/js/core/timeline.js`)
-
 #### Setting Up for Your Platform
 In `src/js/core/params.js`, change these settings:
 
@@ -112,12 +109,8 @@ var participantType = 'mturk';
 var participantType = 'sona';
 ```
 
-#### Changing Response Keys
-In `src/js/core/trial.js`:
-1. Find line 55: `choices: ['f', 'j']`
-2. Change to your preferred keys: `choices: ['a', 'l']`
-3. Update the prompt text (line 49) to match your new keys
-4. Update the correct response logic (lines 65-71)
+**WARNING**: Make sure that the `participant_id` is captured correctly in the URL 
+for the WAVE Client to function correctly!
 
 ### Testing Your Changes
 
@@ -128,6 +121,10 @@ After making changes:
 4. **Check the browser console** (press F12) for any error messages
 
 ### Deploying Your Experiment
+
+Described here is a platform-agnostic guideline. This template is entirely static, without even
+environment variables as a dependency, for ease of deployment. Simply point your deployment
+platform towards the root directory (`index.html` is our entrypoint)
 
 **Recommended Setup:**
 - Configure your hosting platform to deploy from `release` branch, not `main`

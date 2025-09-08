@@ -2,15 +2,15 @@
 
 We are implementing a Python notebook to walk a researcher through setting up an experiment
 and testing to make sure that it works. The notebook should be titled `create_and_validate.ipynb`
-and be located in the `tools/setup` directory. Unless specifically mentioned, assume all files are to be placed in `tools/setup`
+and be located in the `tools/setup_experiment` directory. Unless specifically mentioned, assume all files are to be placed in `tools/setup_experiment`
 
 # Setup
 
-- [ ] We'll use `uv` for package management, and will need a minimal `pyproject.toml` with black, httpx, ipykernel, pandas, dotenv, playwright. WHEN YOU ADD PACKAGES TO `pyproject.toml`, YOU SHOULD USE `uv add` INSTEAD OF GUESSING VERSIONS. Require a python version > 3.10, and put a `.python-version` file as well (specify `3.12`).
+- [x] We'll use `uv` for package management, and will need a minimal `pyproject.toml` with black, httpx, ipykernel, pandas, dotenv. WHEN YOU ADD PACKAGES TO `pyproject.toml`, YOU SHOULD USE `uv add` INSTEAD OF GUESSING VERSIONS. Require a python version > 3.10, and put a `.python-version` file as well (specify `3.12`).
 
-- [ ] You'll need to install the WAVE python client from github, using `uv add https://github.com/WAVE-Lab-Williams/wave-client/releases/latest/download/wave_client-1.0.0-py3-none-any.whl`
+- [x] You'll need to install the WAVE python client from github, using `uv add https://github.com/WAVE-Lab-Williams/wave-client/releases/latest/download/wave_client-1.0.0-py3-none-any.whl`
 
-- [ ] Create a `.env.example` file with the environment variables `EXPERIMENTEE_API_KEY`, `RESEARCHER_API_KEY`, and `WAVE_BACKEND_URL` ('https://wave-backend-production-8781.up.railway.app', but make sure there's a comment mentioning that the URL must match `params.js`)
+- [x] Create a `.env.example` file with the environment variables `EXPERIMENTEE_API_KEY`, `RESEARCHER_API_KEY`, and `WAVE_BACKEND_URL` ('https://wave-backend-production-8781.up.railway.app', but make sure there's a comment mentioning that the URL must match `params.js`)
 
 # What the notebook should include
 

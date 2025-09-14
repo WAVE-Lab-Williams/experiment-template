@@ -22,7 +22,7 @@ from wave_client.models.base import ExperimentTypeCreate
 import pandas as pd
 
 
-def load_environment_variables(env_file_path: str = ".env") -> Tuple[str, Optional[str], str]:
+def load_environment_variables(env_file_path: str = "tools/.env") -> Tuple[str, Optional[str], str]:
     """Load and validate environment variables."""
     print(f"Present working directory: {os.getcwd()}")
     print(f"Loading environment variables from {os.getcwd()}/{env_file_path}")
@@ -33,10 +33,10 @@ def load_environment_variables(env_file_path: str = ".env") -> Tuple[str, Option
     wave_backend_url: Optional[str] = os.getenv("WAVE_BACKEND_URL")
 
     if not researcher_api_key:
-        print("❌ RESEARCHER_API_KEY not found in tools/.env file")
+        print("❌ RESEARCHER_API_KEY not found, try changing `env_file_path`")
         sys.exit("Missing API key")
     if not wave_backend_url:
-        print("❌ WAVE_BACKEND_URL not found in tools/.env file")
+        print("❌ WAVE_BACKEND_URL not found, try changing `env_file_path`")
         sys.exit("Missing Wave Backend URL")
 
     return researcher_api_key, experimentee_api_key, wave_backend_url
@@ -52,11 +52,10 @@ def load_admin_environment_variables(env_file_path: str = ".env") -> Tuple[str, 
     wave_backend_url: Optional[str] = os.getenv("WAVE_BACKEND_URL")
 
     if not admin_api_key:
-        print("❌ ADMIN_API_KEY not found in tools/.env file")
-        print("💡 Add your admin-level API key to tools/.env")
+        print("❌ ADMIN_API_KEY not found, try changing `env_file_path`")
         sys.exit("Missing ADMIN API key")
     if not wave_backend_url:
-        print("❌ WAVE_BACKEND_URL not found in tools/.env file")
+        print("❌ WAVE_BACKEND_URL not found, try changing `env_file_path`")
         sys.exit("Missing Wave Backend URL")
 
     return admin_api_key, wave_backend_url
@@ -81,9 +80,6 @@ def start_local_server(port: int = 8080, experiment_root: str = "../") -> str:
     server_thread: threading.Thread = threading.Thread(target=start_server, daemon=True)
     server_thread.start()
     time.sleep(2)  # Give server time to start
-
-    # Ensure main thread stays in original directory
-    os.chdir(original_cwd)
 
     experiment_url: str = f"http://localhost:{port}/"
     try:

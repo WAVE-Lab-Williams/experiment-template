@@ -1,6 +1,6 @@
 # JSPsych Experiment Template
 
-<!-- Generate for downstream repos using https://deploy-badge.vercel.app/vercel -->
+<!-- Generate a new link for downstream repos using https://deploy-badge.vercel.app/vercel -->
 ![Vercel Deploy](https://deploy-badge.vercel.app/vercel/experiment-template) 
 
 A user-friendly template for creating online psychology experiments using JSPsych. This template is designed specifically for simple visual perception studies where participants respond to colored stimuli.
@@ -28,8 +28,47 @@ This experiment template:
 ### Prerequisites
 - A computer with a web browser (Chrome, Firefox, Safari, or Edge)
 - Basic text editing skills (preferably in a coding IDE such as VSCode)
+- **Python 3.10+** (for the automated setup notebook)
 - Your stimulus images (if different from the provided examples)
-- **WAVE backend access** with experiment schema defined (see [WAVE Integration Guide](docs/setup/wave-integration.md))
+- **WAVE backend access** with API keys
+
+## 🚀 Quick Setup with Setup Notebook (Recommended)
+
+**The easiest way to set up your experiment is using our interactive Python notebook:**
+
+1. **Navigate to the tools directory**
+   ```bash
+   cd tools/
+   ```
+
+2. **Install UV package manager and set up environment**
+   ```bash
+   # Install uv (fast Python package manager)
+   curl -LsSf https://astral.sh/uv/install.sh | sh   # macOS/Linux
+   # or for Windows: powershell -c "irm https://astral.sh/uv/install.ps1 | iex"
+
+   # Install dependencies
+   uv sync
+   ```
+
+3. **Configure your API keys**
+   - Copy `tools/.env.example` to `tools/.env`
+   - Add your WAVE API keys (RESEARCHER_API_KEY and EXPERIMENTEE_API_KEY)
+
+4. **Run the setup notebook**
+   - Open `tools/setup_experiment.ipynb` in VS Code, Jupyter Lab, or PyCharm
+   - Follow the step-by-step guided setup process
+
+**The notebook automatically handles:**
+- ✅ Local experiment testing
+- ✅ Schema definition matching your data structure
+- ✅ WAVE backend experiment type creation
+- ✅ Tag management and organization
+- ✅ Integration testing and validation
+- ✅ Production experiment setup
+- ✅ Comprehensive error checking and guidance
+
+## Manual Setup (Alternative)
 
 ### Quick Start (5 minutes)
 
@@ -41,13 +80,13 @@ This experiment template:
    ```bash
    # Install nvm - follow instructions at:
    # https://github.com/nvm-sh/nvm
-   
+
    # Install and use the project's specified Node.js version
    nvm use             # This reads .nvmrc and uses Node.js 20 LTS
-   
+
    # Install dependencies
    npm install
-   
+
    # Start development server
    npm run dev
    ```

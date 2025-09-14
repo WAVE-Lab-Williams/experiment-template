@@ -22,8 +22,10 @@ from wave_client.models.base import ExperimentTypeCreate
 import pandas as pd
 
 
-def load_environment_variables(env_file_path: str = "tools/.env") -> Tuple[str, Optional[str], str]:
+def load_environment_variables(env_file_path: str = ".env") -> Tuple[str, Optional[str], str]:
     """Load and validate environment variables."""
+    print(f"Present working directory: {os.getcwd()}")
+    print(f"Loading environment variables from {os.getcwd()}/{env_file_path}")
     load_dotenv(env_file_path)
 
     researcher_api_key: Optional[str] = os.getenv("RESEARCHER_API_KEY")
@@ -40,13 +42,36 @@ def load_environment_variables(env_file_path: str = "tools/.env") -> Tuple[str, 
     return researcher_api_key, experimentee_api_key, wave_backend_url
 
 
+def load_admin_environment_variables(env_file_path: str = ".env") -> Tuple[str, str]:
+    """Load and validate admin environment variables."""
+    print(f"Present working directory: {os.getcwd()}")
+    print(f"Loading environment variables from {os.getcwd()}/{env_file_path}")
+    load_dotenv(env_file_path)
+
+    admin_api_key: Optional[str] = os.getenv("ADMIN_API_KEY")
+    wave_backend_url: Optional[str] = os.getenv("WAVE_BACKEND_URL")
+
+    if not admin_api_key:
+        print("❌ ADMIN_API_KEY not found in tools/.env file")
+        print("💡 Add your admin-level API key to tools/.env")
+        sys.exit("Missing ADMIN API key")
+    if not wave_backend_url:
+        print("❌ WAVE_BACKEND_URL not found in tools/.env file")
+        sys.exit("Missing Wave Backend URL")
+
+    return admin_api_key, wave_backend_url
+
+
 def start_local_server(port: int = 8080, experiment_root: str = "../") -> str:
     """Start HTTP server for local experiment testing."""
+    import os
+
+    # Save current directory before any changes
+    original_cwd = os.getcwd()
     experiment_root_path: Path = Path(experiment_root).resolve()
 
     def start_server() -> None:
-        import os
-
+        # Only change directory within the server thread
         os.chdir(experiment_root_path)
         Handler = http.server.SimpleHTTPRequestHandler
         httpd = socketserver.TCPServer(("", port), Handler)
@@ -56,6 +81,9 @@ def start_local_server(port: int = 8080, experiment_root: str = "../") -> str:
     server_thread: threading.Thread = threading.Thread(target=start_server, daemon=True)
     server_thread.start()
     time.sleep(2)  # Give server time to start
+
+    # Ensure main thread stays in original directory
+    os.chdir(original_cwd)
 
     experiment_url: str = f"http://localhost:{port}/"
     try:
@@ -240,7 +268,7 @@ def create_experiment_url(
 
     full_url: str = (
         f"{base_url}"
-        f"experiment?key={quote(experimentee_api_key)}"
+        f"?key={quote(experimentee_api_key)}"
         f"&experiment_id={quote(experiment_id)}"
         f"&participant_id={quote(participant_id)}"
     )
@@ -264,56 +292,6 @@ async def get_experiment_data(
             raise
 
 
-async def cleanup_test_data(
-    experiment_id: str,
-    exp_type_id: int,
-    data_df: pd.DataFrame,
-    skip_experiment_type_creation: bool,
-    researcher_api_key: str,
-    wave_backend_url: str,
-) -> None:
-    """Clean up test data from WAVE backend."""
-    async with WaveClient(api_key=researcher_api_key, base_url=wave_backend_url) as client:
-        try:
-            # Delete experiment data first
-            if len(data_df) > 0:
-                print(f"🗑️  Deleting {len(data_df)} test data points...")
-                deleted_count: int = 0
-
-                for _, row in data_df.iterrows():
-                    try:
-                        await client.experiment_data.delete_row(experiment_id, int(row["id"]))
-                        deleted_count += 1
-                    except Exception as e:
-                        print(f"  ⚠️  Failed to delete row {row['id']}: {e}")
-
-                print(f"✅ Deleted {deleted_count} data rows")
-            else:
-                print("ℹ️  No experiment data found to delete")
-
-            # Delete the test experiment
-            try:
-                await client.experiments.delete(experiment_id)
-                print(f"✅ Deleted test experiment: {experiment_id}")
-            except Exception as e:
-                print(f"⚠️  Failed to delete test experiment: {e}")
-
-            # Delete experiment type ONLY if we created it
-            if not skip_experiment_type_creation:
-                try:
-                    await client.experiment_types.delete(exp_type_id)
-                    print(f"✅ Deleted experiment type: {exp_type_id}")
-                except Exception as e:
-                    print(f"⚠️  Failed to delete experiment type: {e}")
-            else:
-                print(f"ℹ️  Kept existing experiment type: {exp_type_id}")
-
-            print(f"\n✅ Cleanup complete!")
-
-        except Exception as e:
-            print(f"❌ Error during cleanup: {e}")
-            print("💡 You may need to manually delete the test data from WAVE backend")
-            raise
 
 
 def get_user_confirmation(prompt: str, exit_message: Optional[str] = None) -> bool:

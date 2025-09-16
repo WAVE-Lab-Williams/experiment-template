@@ -37,6 +37,14 @@ const PARTICIPANT_ID = urlParams.get('participant_id');
 let waveClient = null;
 let waveEnabled = false;
 
+// Function to update connection warning in the UI
+function updateConnectionWarning(message) {
+    const warningElement = document.getElementById('wave-connection-warning');
+    if (warningElement) {
+        warningElement.innerHTML = message;
+    }
+}
+
 
 // Initialize WAVE client
 function initializeWaveClient() {
@@ -47,7 +55,7 @@ function initializeWaveClient() {
 
     if (!WAVE_API_KEY || !EXPERIMENT_ID || !PARTICIPANT_ID) {
         console.warn('⚠️ WAVE parameters missing. Data will only be displayed locally.');
-        console.warn('Required URL format: https://yoursite.com/experiment?key=YOUR_API_KEY&experiment_id=YOUR_EXPERIMENT_ID&participant_id=PARTICIPANT_ID');
+        console.warn('Required URL format: https://yoursite.com/?key=YOUR_API_KEY&experiment_id=YOUR_EXPERIMENT_ID&participant_id=PARTICIPANT_ID');
         return false;
     }
 
@@ -62,9 +70,13 @@ function initializeWaveClient() {
             console.log('✅ WAVE backend connected:', health);
             console.log('⚠️ REMINDER: Verify experiment schema exists for experiment_id:', EXPERIMENT_ID);
             waveEnabled = true;
+            // Clear any connection warning since we're now connected
+            updateConnectionWarning('');
         }).catch(error => {
             console.warn('⚠️ WAVE backend connection failed:', error.message);
             console.warn('Data will only be displayed locally.');
+            // Show connection failure warning
+            updateConnectionWarning('<p style="color: #d63384; background: #f8d7da; padding: 8px 12px; border: 1px solid #f5c2c7; border-radius: 4px; margin: 10px 0; font-size: 14px;"><strong>⚠️ WAVE Backend Connection Failed:</strong> URL parameters are present but unable to connect to WAVE backend. Your responses will not be saved. Please check your API key and network connection.</p>');
         });
 
         return true;

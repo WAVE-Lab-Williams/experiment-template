@@ -1,5 +1,8 @@
 # JSPsych Experiment Template
 
+<!-- Generate a new link for downstream repos using https://deploy-badge.vercel.app/vercel -->
+![Vercel Deploy](https://deploy-badge.vercel.app/vercel/experiment-template) 
+
 A user-friendly template for creating online psychology experiments using JSPsych. This template is designed specifically for simple visual perception studies where participants respond to colored stimuli.
 
 ## What This Template Does
@@ -25,8 +28,52 @@ This experiment template:
 ### Prerequisites
 - A computer with a web browser (Chrome, Firefox, Safari, or Edge)
 - Basic text editing skills (preferably in a coding IDE such as VSCode)
+- **Python 3.10+** (for the automated setup notebook)
 - Your stimulus images (if different from the provided examples)
-- **WAVE backend access** with experiment schema defined (see [WAVE Integration Guide](docs/setup/wave-integration.md))
+- WAVE backend API keys with Experimentee and Researcher level permissions. (Generated via [Unkey](https://app.unkey.com/apis) by Prof. Wong).
+
+## 🚀 Quick Setup with Setup Notebook (Recommended)
+
+**The easiest way to set up your experiment is using our interactive Python notebook:**
+
+1. **Navigate to the tools directory**
+   ```bash
+   cd tools/
+   ```
+
+2. **Install [UV package manager](https://docs.astral.sh/uv/getting-started/installation/) and set up the environment**
+   ```bash
+   # Install uv (fast Python package manager)
+   curl -LsSf https://astral.sh/uv/install.sh | sh   # macOS/Linux
+   # or for Windows: powershell -c "irm https://astral.sh/uv/install.ps1 | iex"
+   ```
+
+   If you happen to be on Windows + PyCharm, you can follow the instructions [here](https://www.jetbrains.com/help/pycharm/uv.html),
+   otherwise, install your dependencies with 
+
+   ```
+   # Install dependencies
+   uv sync
+   ```
+
+3. **Configure your API keys**
+   - Copy `tools/.env.example` to `tools/.env`
+   - Add your WAVE API keys (RESEARCHER_API_KEY and EXPERIMENTEE_API_KEY)
+
+4. **Run the setup notebook**
+   - Open `tools/setup_experiment.ipynb` in VS Code, Jupyter Lab, or PyCharm
+   - Follow the step-by-step guided setup process in the notebook
+
+**The notebook automatically handles:**
+- ✅ Local experiment testing
+- ✅ Schema definition matching your data structure
+- ✅ WAVE backend experiment type creation
+- ✅ Tag management and organization
+- ✅ Integration testing and validation
+- ✅ Production experiment setup
+- ✅ Comprehensive error checking and guidance
+
+## Manual Setup (Alternative)
 
 ### Quick Start (5 minutes)
 
@@ -38,13 +85,13 @@ This experiment template:
    ```bash
    # Install nvm - follow instructions at:
    # https://github.com/nvm-sh/nvm
-   
+
    # Install and use the project's specified Node.js version
    nvm use             # This reads .nvmrc and uses Node.js 20 LTS
-   
+
    # Install dependencies
    npm install
-   
+
    # Start development server
    npm run dev
    ```
@@ -87,12 +134,6 @@ All text that participants see is in `src/js/content/instructions.js`:
 - **Consent form**: Edit `consentForm()` function (line 65)
 - **Debrief questions**: Edit `debriefForm()` function (line 90)
 
-#### Adjusting Timing
-In `src/js/core/params.js`, you can change:
-- `PRESTIM_DISP_TIME`: How long the prompt shows before stimulus (default: 800ms)
-- `FIXATION_DISP_TIME`: How long the fixation cross shows (default: 500ms)
-- Stimulus duration is set in the experiment design (line 169 in `src/js/core/timeline.js`)
-
 #### Setting Up for Your Platform
 In `src/js/core/params.js`, change these settings:
 
@@ -112,12 +153,8 @@ var participantType = 'mturk';
 var participantType = 'sona';
 ```
 
-#### Changing Response Keys
-In `src/js/core/trial.js`:
-1. Find line 55: `choices: ['f', 'j']`
-2. Change to your preferred keys: `choices: ['a', 'l']`
-3. Update the prompt text (line 49) to match your new keys
-4. Update the correct response logic (lines 65-71)
+**WARNING**: Make sure that the `participant_id` is captured correctly in the URL 
+for the WAVE Client to function correctly!
 
 ### Testing Your Changes
 
@@ -128,6 +165,10 @@ After making changes:
 4. **Check the browser console** (press F12) for any error messages
 
 ### Deploying Your Experiment
+
+Described here is a platform-agnostic guideline. This template is entirely static, without even
+environment variables as a dependency, for ease of deployment. Simply point your deployment
+platform towards the root directory (`index.html` is our entrypoint)
 
 **Recommended Setup:**
 - Configure your hosting platform to deploy from `release` branch, not `main`

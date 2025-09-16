@@ -1,8 +1,5 @@
 """
 Utility functions for the WAVE experiment setup notebook.
-
-This module contains helper functions to reduce complexity in the notebook cells
-while keeping the core logic accessible for troubleshooting.
 """
 
 import os
@@ -22,10 +19,11 @@ from wave_client.models.base import ExperimentTypeCreate
 import pandas as pd
 
 
-def load_environment_variables(env_file_path: str = "tools/.env") -> Tuple[str, Optional[str], str]:
+def load_environment_variables(env_file_path: str = ".env") -> Tuple[str, Optional[str], str]:
     """Load and validate environment variables."""
-    print(f"Present working directory: {os.getcwd()}")
-    print(f"Loading environment variables from {os.getcwd()}/{env_file_path}")
+    pwd = os.getcwd()
+    print(f"Present working directory: {pwd}")
+    print(f"Loading environment variables from {pwd}/{env_file_path}")
     load_dotenv(env_file_path)
 
     researcher_api_key: Optional[str] = os.getenv("RESEARCHER_API_KEY")
@@ -33,10 +31,10 @@ def load_environment_variables(env_file_path: str = "tools/.env") -> Tuple[str, 
     wave_backend_url: Optional[str] = os.getenv("WAVE_BACKEND_URL")
 
     if not researcher_api_key:
-        print("❌ RESEARCHER_API_KEY not found, try changing `env_file_path`")
+        print(f"❌ RESEARCHER_API_KEY not found in {pwd}, try changing `env_file_path` to get to `tools/.env`")
         sys.exit("Missing API key")
     if not wave_backend_url:
-        print("❌ WAVE_BACKEND_URL not found, try changing `env_file_path`")
+        print(f"❌ WAVE_BACKEND_URL not found  in {pwd}, try changing `env_file_path` to get to `tools/.env`")
         sys.exit("Missing Wave Backend URL")
 
     return researcher_api_key, experimentee_api_key, wave_backend_url

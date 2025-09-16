@@ -30,7 +30,7 @@ This experiment template:
 - Basic text editing skills (preferably in a coding IDE such as VSCode)
 - **Python 3.10+** (for the automated setup notebook)
 - Your stimulus images (if different from the provided examples)
-- **WAVE backend access** with API keys
+- WAVE backend API keys with Experimentee and Researcher level permissions. (Generated via [Unkey](https://app.unkey.com/apis) by Prof. Wong).
 
 ## 🚀 Quick Setup with Setup Notebook (Recommended)
 
@@ -41,12 +41,17 @@ This experiment template:
    cd tools/
    ```
 
-2. **Install UV package manager and set up environment**
+2. **Install [UV package manager](https://docs.astral.sh/uv/getting-started/installation/) and set up the environment**
    ```bash
    # Install uv (fast Python package manager)
    curl -LsSf https://astral.sh/uv/install.sh | sh   # macOS/Linux
    # or for Windows: powershell -c "irm https://astral.sh/uv/install.ps1 | iex"
+   ```
 
+   If you happen to be on Windows + PyCharm, you can follow the instructions [here](https://www.jetbrains.com/help/pycharm/uv.html),
+   otherwise, install your dependencies with 
+
+   ```
    # Install dependencies
    uv sync
    ```
@@ -57,7 +62,7 @@ This experiment template:
 
 4. **Run the setup notebook**
    - Open `tools/setup_experiment.ipynb` in VS Code, Jupyter Lab, or PyCharm
-   - Follow the step-by-step guided setup process
+   - Follow the step-by-step guided setup process in the notebook
 
 **The notebook automatically handles:**
 - ✅ Local experiment testing

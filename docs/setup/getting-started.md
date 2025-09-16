@@ -5,10 +5,58 @@ This guide will help you set up and customize your JSPsych experiment with WAVE 
 ## Prerequisites
 
 - Basic text editing skills
-- **Node.js** (via nvm - see setup below)
-- **WAVE backend access** with experiment schema defined
+- **Python 3.10+** for the setup notebook
+- **Node.js** (via nvm - optional, for manual development)
+- **WAVE backend access** with API keys
 
-## Quick Setup
+## Quick Setup with Setup Notebook (Recommended)
+
+### 🚀 Automated Setup Process
+
+The easiest way to set up your experiment is using our interactive Python notebook:
+
+1. **Navigate to the tools directory**
+   ```bash
+   cd tools/
+   ```
+
+2. **Install UV package manager**
+   ```bash
+   # On macOS/Linux:
+   curl -LsSf https://astral.sh/uv/install.sh | sh
+
+   # On Windows:
+   powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+   ```
+
+3. **Set up environment**
+   ```bash
+   uv sync  # Install dependencies
+   ```
+
+4. **Create your environment file**
+   - Copy `tools/.env.example` to `tools/.env`
+   - Fill in your WAVE API keys:
+     - `RESEARCHER_API_KEY` - Your researcher-level key
+     - `EXPERIMENTEE_API_KEY` - Your participant-level key
+     - `WAVE_BACKEND_URL` - The WAVE backend URL
+
+5. **Run the setup notebook**
+   - Open `tools/setup_experiment.ipynb` in:
+     - **VS Code** with Jupyter extension, or
+     - **Jupyter Lab**: `uv tool run jupyter lab`, or
+     - **PyCharm** with the notebook plugin
+   - Follow the notebook step-by-step for complete guided setup
+
+The notebook will:
+- ✅ Test your experiment locally
+- ✅ Define experiment schemas matching your data
+- ✅ Create experiment types and tags in WAVE backend
+- ✅ Validate data logging works correctly
+- ✅ Create production experiments ready for participants
+- ✅ Clean up test data automatically
+
+## Manual Setup (Alternative)
 
 ### 1. Environment Setup
 
@@ -30,13 +78,13 @@ npm run dev
 
 - Open `http://localhost:8080/` in your browser
 - Go through the entire experiment to understand the participant experience
-- For production, add WAVE URL parameters in the URL (see [WAVE Integration](wave-integration.md))
+- For production setup, see [WAVE Integration](wave-integration.md)
 
 ### 3. Customize for Your Study
 
 See the [Customization Guide](../customization/) for detailed instructions on:
 - [Changing stimuli](../customization/stimuli.md)
-- [Adjusting parameters](../customization/parameters.md)  
+- [Adjusting parameters](../customization/parameters.md)
 - [Modifying styling](../customization/styling.md)
 
 ## Available Commands

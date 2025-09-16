@@ -2,9 +2,20 @@
 
 This JSPsych experiment template has been integrated with the WAVE client for automated data logging to the WAVE backend system.
 
-## ⚠️ CRITICAL REQUIREMENTS
+## 🚀 Recommended Setup: Use the Setup Notebook
 
-**Before running any experiments, you MUST:**
+**The easiest way to set up WAVE integration is using our interactive setup notebook:**
+
+- Located at `tools/setup_experiment.ipynb`
+- Automatically handles schema definition, experiment creation, and validation
+- Guides you through the complete setup process step-by-step
+- See [Getting Started Guide](getting-started.md) for notebook setup instructions
+
+## Manual Setup (Advanced Users)
+
+### ⚠️ CRITICAL REQUIREMENTS
+
+**If setting up manually, you MUST:**
 
 1. **Define your experiment schema in the WAVE backend first**
    - All data columns must be pre-defined
@@ -12,7 +23,7 @@ This JSPsych experiment template has been integrated with the WAVE client for au
    - The backend will reject data that doesn't match the schema
 
 2. **Include required URL parameters**
-   - `key` - Your WAVE API key
+   - `key` - Your WAVE API key (EXPERIMENTEE-level)
    - `experiment_id` - The experiment UUID from WAVE backend
    - `participant_id` - Unique identifier for each participant
 

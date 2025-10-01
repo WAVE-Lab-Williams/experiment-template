@@ -59,3 +59,34 @@ function randomChoiceIndex(arrayLength, numChoices) {
 function randomIntFromRange(min, max) { // min and max included
     return Math.floor(Math.random() * (max - min + 1) + min)
 }
+
+function cutArray(array, cutAfterIndex) {
+    var cutArray1 = array.slice(0,cutAfterIndex)
+    var cutArray2 = array.slice(cutAfterIndex+1)
+    return
+}
+
+function count_words(str) {
+    // Handle empty or null/undefined input
+    if (!str || typeof str !== 'string') {
+        return 0;
+    }
+
+    // Trim whitespace and split by one or more whitespace characters
+    // Filter out empty strings that might result from multiple spaces
+    return str.trim().split(/\s+/).filter(word => word.length > 0).length;
+}
+
+function calculate_delay_time(num_words, multiplier = 50) {
+    // Handle invalid input for num_words
+    if (typeof num_words !== 'number' || num_words < 0) {
+        return 0;
+    }
+
+    // Handle invalid input for multiplier
+    if (typeof multiplier !== 'number' || multiplier < 0) {
+        multiplier = 50; // fallback to default
+    }
+
+    return num_words * multiplier;
+}

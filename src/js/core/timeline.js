@@ -108,7 +108,7 @@ if (workerID === 'no_query') {
 }
 
 if (workerID !== 'no_query') {
-    console.log('Worker ID captured from URL:', workerID);
+    console.log('Worker singID captured from URL:', workerID);
 } else {
     workerID = 'no_query_worker'+ Math.floor(Math.random() * 90000) + 10000;
     console.warn('⚠️ No participant ID found in URL - randomly generated:', workerID);
@@ -162,18 +162,30 @@ INSTR PROCEDURE (*sec_instr)
 /* -------  Set Preload Images for Instr + Demo (*preload_instr) -------------- */
 
 forPreload.push(`${stimFolder}demo-circles.png`);
-// NOTE TO KIM: YOU NEED TO CREATE A MODIFIED INSTRUCTION PLUGIN THAT DELAYS ACTIVATION OF THE "NEXT" BUTTON, AND INSERT EXAMPLE DEMO TRIALS
+// NOTE TO KIM: NEED TO INSERT DEMO TRIALS TO SHOW STUDENTS WHAT THAT LOOKS LIKE
 
 /* -------  Push Instr + Demo Trials to timeline_instr (*push_instr) -------------- */
 var instrContent = loadInstrContent();
-var instructions = {
+// var demoSlideInsert = 3 // type the index number of where you put the demo here
+
+
+var instructions1 = {
     type: jsPsychInstructions,
     pages: instrContent,
     show_clickable_nav: true,
     allow_keys: false,
+    allow_backward: false,
+    delay_time: function(){
+        const calculated_delays = [];
+        for (let i = 0; i < demoSlideInsert; i++) {
+            calculated_delays.push(calculate_delay_time(count_words(instrContent[i]),60));
+        }
+        return calculated_delays
+    }, // end delay_time
 };
 
-timelineinstr.push(instructions);
+
+timelineinstr.push(instructions1);
 
 /*
 ===============================================================

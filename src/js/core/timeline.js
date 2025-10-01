@@ -162,14 +162,25 @@ INSTR PROCEDURE (*sec_instr)
 /* -------  Set Preload Images for Instr + Demo (*preload_instr) -------------- */
 
 forPreload.push(`${stimFolder}demo-circles.png`);
-// NOTE TO KIM: NEED TO INSERT DEMO TRIALS TO SHOW STUDENTS WHAT THAT LOOKS LIKE
+// make sure to load any images you need for the demo itself. Usually you have different demo images than the main expt, such that you don't give away the content of the expt itself (but still give the participant practice and familiarity with the task. In this case, though, the demo images themselves are identical to the main expt. Variable names are the only difference.
+var demo_circle_colors = ["blue","orange"];
+var demo_display_durations = [200, 500];
+for (var i = 0; i < demo_circle_colors.length; i++) {
+    forPreload.push(`${stimFolder}${demo_circle_colors[i]}-circle.png`);
+}
+
+//decide what the parameters for the demo trial should be. Sometimes you hardcode this, sometimes you randomly choose from the options you defined above.
+var thisDemoCircle = randomChoice(demo_circle_colors,1)[0];
+var thisDemoDispDuration = randomChoice(demo_display_durations,1)[0];
 
 /* -------  Push Instr + Demo Trials to timeline_instr (*push_instr) -------------- */
 var instrContent = loadInstrContent();
+var demoTrialIndex = 3;
+var [instrContent_beforedemo,instrContent_afterdemo] = cutArray(instrContent,3);
 
 var instructions1 = {
     type: jsPsychInstructions,
-    pages: instrContent,
+    pages: instrContent_beforedemo,
     show_clickable_nav: true,
     allow_keys: false,
     allow_backward: false,
@@ -182,8 +193,24 @@ var instructions1 = {
     }, // end delay_time
 };
 
+var instructions2 = {
+    type: jsPsychInstructions,
+    pages: instrContent_afterdemo,
+    show_clickable_nav: true,
+    allow_keys: false,
+    allow_backward: false,
+    delay_time: function(){
+        const calculated_delays = [];
+        for (let i = demoTrialIndex; i < instrContent.length; i++) {
+            calculated_delays.push(calculate_delay_time(count_words(instrContent[i]),60));
+        }
+        return calculated_delays
+    }, // end delay_time
+};
 
 timelineinstr.push(instructions1);
+runSingleTrial(thisDemoCircle,thisDemoDispDuration,timelineinstr,"prac") // pushesyour demo trial
+timelineinstr.push(instructions2);
 
 /*
 ===============================================================

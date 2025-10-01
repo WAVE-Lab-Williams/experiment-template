@@ -62,8 +62,8 @@ function randomIntFromRange(min, max) { // min and max included
 
 function cutArray(array, cutAfterIndex) {
     var cutArray1 = array.slice(0,cutAfterIndex)
-    var cutArray2 = array.slice(cutAfterIndex+1)
-    return
+    var cutArray2 = array.slice(cutAfterIndex)
+    return [cutArray1, cutArray2]
 }
 
 function count_words(str) {

@@ -166,8 +166,6 @@ forPreload.push(`${stimFolder}demo-circles.png`);
 
 /* -------  Push Instr + Demo Trials to timeline_instr (*push_instr) -------------- */
 var instrContent = loadInstrContent();
-// var demoSlideInsert = 3 // type the index number of where you put the demo here
-
 
 var instructions1 = {
     type: jsPsychInstructions,
@@ -177,7 +175,7 @@ var instructions1 = {
     allow_backward: false,
     delay_time: function(){
         const calculated_delays = [];
-        for (let i = 0; i < demoSlideInsert; i++) {
+        for (let i = 0; i < instrContent.length; i++) {
             calculated_delays.push(calculate_delay_time(count_words(instrContent[i]),60));
         }
         return calculated_delays

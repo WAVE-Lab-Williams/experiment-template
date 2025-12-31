@@ -48,6 +48,28 @@ function runSingleTrial(
     var thisStim = `${stimFolder}${stimColor}-circle.png`
     var persistent_prompt = `<div style="position: fixed; top: 50px; left: 50%; transform: translateX(-50%); text-align: center;">f = blue; j = orange </div>`;
 
+    /* testing a slider */
+    tarSize = 40;
+    var dispCircleSlider = {
+        type: jsPsychHtmlSliderResponseResizing,
+        stimulus: `<img src="${thisStim}" />`,
+        slider_start: 70,
+        min: 20,
+        max: 120,
+        slider_width: 500,
+        labels: ["smaller","larger"],
+        trial_duration: null,
+        response_ends_trial: true,
+        prompt: `${persistent_prompt}`,
+        data: {
+            trial_category: 'answer'+trialType,
+            trial_stimulus: thisStim,
+            correct_response: tarSize,
+        }, // data end
+        on_finish: function(data){
+            data.thisDifference = data.response - tarSize
+        } // on finish end
+    }; // dispCircle end
 
     var dispCircle = {
         type: jsPsychImageKeyboardResponse,
@@ -107,6 +129,7 @@ function runSingleTrial(
     timelineTrialsToPush.push(prestim);
     timelineTrialsToPush.push(fixation);
     timelineTrialsToPush.push(dispCircle);
+    // timelineTrialsToPush.push(dispCircleSlider); // if you wanted to use the slider reproduction measurement tool
     timelineTrialsToPush.push(cursor_on);
 
 }

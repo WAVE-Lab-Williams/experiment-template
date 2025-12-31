@@ -121,7 +121,7 @@ function processTrialData(data) {
             trial_category: data.trial_category,
             stimulus: data.stimulus,
             response: data.response,
-            response_time: data.rt / 1000, // Convert to seconds
+            response_time: data.rt,
             accuracy: data.thisAcc === 1,
             correct_response: data.correct_response,
             stimulus_duration: data.trial_duration,

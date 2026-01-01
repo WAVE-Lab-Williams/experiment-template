@@ -105,9 +105,11 @@ async function logToWave(data) {
 
 // Enhanced JSPsych data processing
 function processTrialData(data) {
-    // Add WAVE-specific fields
-    data.experiment_id = EXPERIMENT_ID;
-    data.participant_id = PARTICIPANT_ID;
+    // Add WAVE-specific standard fields
+    // checks if PARTICIPANT_ID (pulled from URL) is "null"
+    // if yes, uses data.participant_id (input during experiment) instead
+    data.participant_id = PARTICIPANT_ID ?? data.participant_id;
+    data.experiment_id = EXPERIMENT_ID ?? data.experiment_id;
     data.timestamp = new Date().toISOString();
     data.user_agent = navigator.userAgent;
 
@@ -126,7 +128,6 @@ function processTrialData(data) {
             correct_response: data.correct_response,
             stimulus_duration: data.trial_duration,
             time_elapsed: data.time_elapsed,
-            participant_id_backup: data.participant_id_backup,
             timestamp: data.timestamp,
             user_agent: data.user_agent
         };

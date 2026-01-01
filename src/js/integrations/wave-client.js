@@ -122,7 +122,7 @@ function processTrialData(data) {
             stimulus: data.stimulus,
             response: data.response,
             response_time: data.rt,
-            accuracy: data.thisAcc === 1,
+            accuracy: data.thisAcc,
             correct_response: data.correct_response,
             stimulus_duration: data.trial_duration,
             time_elapsed: data.time_elapsed,

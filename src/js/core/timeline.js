@@ -30,7 +30,7 @@ JSPsych Init, and onFinish (*sec_init)
 var jsPsych = initJsPsych({
     on_trial_finish: function(data) {
         // console.log(JSON.stringify(data));
-        data.participant_id = workerID;
+        data.participant_id_backup = workerID;
         
         // Process data through WAVE client if available
         if (window.waveClient) {
@@ -220,7 +220,7 @@ EXPERIMENT SECTION (*sec_expt)
 
 /* -------- defining factors && exptdesign (*factors) --------*/
 
-var poss_circle_colors = ["blue","orrange"];
+var poss_circle_colors = ["blue","orange"];
 var poss_disp_duration = [200, 500];
 
 var factors = {

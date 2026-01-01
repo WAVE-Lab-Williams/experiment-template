@@ -126,7 +126,7 @@ function processTrialData(data) {
             correct_response: data.correct_response,
             stimulus_duration: data.trial_duration,
             time_elapsed: data.time_elapsed,
-            participant_id: data.participant_id,
+            participant_id_backup: data.participant_id_backup,
             timestamp: data.timestamp,
             user_agent: data.user_agent
         };

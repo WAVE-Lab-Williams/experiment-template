@@ -30,7 +30,7 @@ JSPsych Init, and onFinish (*sec_init)
 var jsPsych = initJsPsych({
     on_trial_finish: function(data) {
         // console.log(JSON.stringify(data));
-        data.pNo = workerID;
+        data.participant_id = workerID;
         
         // Process data through WAVE client if available
         if (window.waveClient) {
@@ -108,7 +108,7 @@ if (workerID === 'no_query') {
 }
 
 if (workerID !== 'no_query') {
-    console.log('Worker ID captured from URL:', workerID);
+    console.log('Worker singID captured from URL:', workerID);
 } else {
     workerID = 'no_query_worker'+ Math.floor(Math.random() * 90000) + 10000;
     console.warn('⚠️ No participant ID found in URL - randomly generated:', workerID);
@@ -128,9 +128,12 @@ var id = {
                 );
             } else if (workerID.startsWith('no_query')) {
                 console.log(
-                    `The query was not successfully captured, or there was nothing to query, going with manual input. ${respObj[key]}`,
+                    `The query was not successfully captured, or there was nothing to query, going with manual input. workerID now = ${respObj[key]}`,
                 );
                 workerID = respObj[key];
+            } else if (workerID.startsWith('manual_input')) {
+                console.log(`The query designates to go with the manual input. workerID now = ${respObj[key]}`)
+                workerID = respObj[key]
             } else {
                 console.log(
                     'The manual type differed from the query capture, going with query capture. Assuming the manual input was the wrong one, and that query was correct.',
@@ -162,18 +165,55 @@ INSTR PROCEDURE (*sec_instr)
 /* -------  Set Preload Images for Instr + Demo (*preload_instr) -------------- */
 
 forPreload.push(`${stimFolder}demo-circles.png`);
-// NOTE TO KIM: YOU NEED TO CREATE A MODIFIED INSTRUCTION PLUGIN THAT DELAYS ACTIVATION OF THE "NEXT" BUTTON, AND INSERT EXAMPLE DEMO TRIALS
+// make sure to load any images you need for the demo itself. Usually you have different demo images than the main expt, such that you don't give away the content of the expt itself (but still give the participant practice and familiarity with the task. In this case, though, the demo images themselves are identical to the main expt. Variable names are the only difference.
+var demo_circle_colors = ["blue","orange"];
+var demo_display_durations = [200, 500];
+for (var i = 0; i < demo_circle_colors.length; i++) {
+    forPreload.push(`${stimFolder}${demo_circle_colors[i]}-circle.png`);
+}
+
+//decide what the parameters for the demo trial should be. Sometimes you hardcode this, sometimes you randomly choose from the options you defined above.
+var thisDemoCircle = randomChoice(demo_circle_colors,1)[0];
+var thisDemoDispDuration = randomChoice(demo_display_durations,1)[0];
 
 /* -------  Push Instr + Demo Trials to timeline_instr (*push_instr) -------------- */
 var instrContent = loadInstrContent();
-var instructions = {
+var demoTrialIndex = 3;
+var [instrContent_beforedemo,instrContent_afterdemo] = cutArray(instrContent,3);
+
+var instructions1 = {
     type: jsPsychInstructions,
-    pages: instrContent,
+    pages: instrContent_beforedemo,
     show_clickable_nav: true,
     allow_keys: false,
+    allow_backward: false,
+    delay_time: function(){
+        const calculated_delays = [];
+        for (let i = 0; i < instrContent.length; i++) {
+            calculated_delays.push(calculate_delay_time(count_words(instrContent[i]),60));
+        }
+        return calculated_delays
+    }, // end delay_time
 };
 
-timelineinstr.push(instructions);
+var instructions2 = {
+    type: jsPsychInstructions,
+    pages: instrContent_afterdemo,
+    show_clickable_nav: true,
+    allow_keys: false,
+    allow_backward: false,
+    delay_time: function(){
+        const calculated_delays = [];
+        for (let i = demoTrialIndex; i < instrContent.length; i++) {
+            calculated_delays.push(calculate_delay_time(count_words(instrContent[i]),60));
+        }
+        return calculated_delays
+    }, // end delay_time
+};
+
+timelineinstr.push(instructions1);
+runSingleTrial(thisDemoCircle,thisDemoDispDuration,timelineinstr,"prac") // pushesyour demo trial
+timelineinstr.push(instructions2);
 
 /*
 ===============================================================
@@ -250,7 +290,12 @@ var closing = {
     type: jsPsychHtmlKeyboardResponse,
     stimulus: closingText(participantType),
     choices: [' '],
-    data: { trial_category: 'closing' }
+    data: { trial_category: 'closing' },
+    on_finish: function(){
+        if (participantType == 'prolific') {
+            window.open(prolific_url, '_blank');
+        }
+    }, // on finish complete
 };
 
 timelineclose.push(feedback_summary);

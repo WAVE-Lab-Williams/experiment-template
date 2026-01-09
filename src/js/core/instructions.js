@@ -26,16 +26,20 @@ var welcometext = function() {
 function requestIDinput(participantType, workerID) {
     if (participantType == 'sona') {
         var insert =
-            'SONA Portal ID (not your Yale ID) -- this should be a 5 digit number with no letters';
+            'SONA Portal ID (not your Williams ID) -- this should be a 5 digit number with no letters';
     } else {
         var insert = participantType + ' ID';
     }
 
-    if (workerID != 'no_query' && workerID != undefined) {
+    if (workerID.startsWith('manual')){
+        console.log('Query-captured workerID requires manual input.')
+        var inputbox =
+            '<p>Please enter your initials (no spaces, no punctuation): ' +
+            ":</p><br><input required='true' autofocus='true' name='numberID' type='text' size='70' />";
+    } else if (workerID != 'no_query' && workerID != undefined) {
         console.log(workerID);
         var inputbox =
-            '<p>Please provide your ' +
-            insert +
+            '<p>Please enter your participant ID for this experiment: ' +
             ":</p><br><input required='true' autofocus='true' name='numberID' type='text' size='70' value='" +
             workerID +
             "' />";
@@ -63,9 +67,8 @@ function loadInstrContent() {
     var instrContent = [
         /* ind0 */ '<p>Hello! Thank you for participating in our study. Please take a moment to adjust your seating so that you can comfortably watch the monitor and use the keyboard. Feel free to dim the lights as well.</p><p>Close the door or do whatever is necessary to <b>minimize disturbance during the experiment</b>. Please also take a moment to silence your phone so that you are not interrupted by any messages mid-experiment. Do <i>not</i> switch to any other tabs or windows until you are complete.</p>',
         /* ind1 */ `<p>In this quick experiment, you will see an image of a circle flash on screen. The circle will either be <b>orange</b> or <b>blue</b>, as shown below:</p><p><div style='text-align: center'><img src="${stimFolder}demo-circles.png" height="${imgHeight}"/></div></p>`,
-        /* ind2 */ `<p>These images will flash on screen for only a short amount of time, so pay close attention! Note that the table will always appear first, before the rest of the blocks load in.`,
-        /* ind3 */ `<p>Your task is straightforward: If the circle is <strong>blue</strong>, <strong><i>press "f"</i></strong> on the keyboard as quickly as you can. But if the circle is <strong>orange</strong>, <strong><i>press "j"</i></strong> as quickly as you can.</p><p>Let's give this a try now! Press the button below when you're ready to begin (THIS IS WHERE KIM NEEDS TO ADD TO THE TEMPLATE A DEMO + INSTR DELAY... NOT FUNCTIONAL RIGHT NOW)</p>`,
-        /* ind4 */ `<p>Sometimes, you may be unsure of your answer. This is okay, since the task is designed to be difficult, as images flash quickly!  In times like this, just give it your <b>best guess</b>, as we are interested in your <i>gut intuition</i>.</p><p>Please do your very best to remain as focused and attentive as possible, even at the end of the experiment. I know it is very difficult to stay focused for so long, especially when you are doing the same thing over and over. But remember, the experiment will be all over in less than ${String(estTotalRunTime)} minutes. Press the button below to begin.`,
+        /* ind2 */ `<p>These images will flash on screen for only a short amount of time, so pay close attention!</p><p>Your task is straightforward: If the circle is <strong>blue</strong>, <strong><i>press "f"</i></strong> on the keyboard as quickly as you can. But if the circle is <strong>orange</strong>, <strong><i>press "j"</i></strong> as quickly as you can.</p><p>Let's give this a try now! Press the button below when you're ready to practice this once!</p>`,
+        /* ind3 */ `<p>Good work so far.</p><p>Sometimes, you may be unsure of your answer. This is okay, since the task is designed to be difficult, as images flash quickly!  In times like this, just give it your <b>best guess</b>, as we are interested in your <i>gut intuition</i>.</p><p>Please do your very best to remain as focused and attentive as possible, even at the end of the experiment. I know it is very difficult to stay focused for so long, especially when you are doing the same thing over and over. But remember, the experiment will be all over in less than ${String(estTotalRunTime)} minutes. Press the button below to begin.`,
     ];
 
     for (var i = 0; i < instrContent.length; i++) {
@@ -87,7 +90,7 @@ function consentForm(participantType) {
             '<h5>COSTS AND COMPENSATION</h5><p>There are no costs associated with participation in this study. You will receive <strong>' +
             String(0.5) +
             ' credits</strong> for participating.</p><h5>CONFIDENTIALITY</h5><p>No personally identifying information will be collected, so your participation will be anonymous. The survey is anonymous. We will not know your name. We will not be able to connect any identifying information to your survey answers. However, we will know your mTurk number in order to pay you for your time. We will keep the information about your participation in this research confidential. Your data will be pooled with those from other participants, and may be included in scientific publications and uploaded to public data repositories.</p>' +
-            '<h5>LEARNING MORE</h5><p>If you have questions about this study, you may contact your experimenter Kimberly Wong at kww3@williams.com. If you have questions about your rights as a research participant, or you have complaints about this research, you can contact the Yale Institutional Review Boards at 203-785-4688 or hrpp@yale.edu.</p><h5>INFORMED CONSENT</h5><p>Your participation indicates that you have read and understood this consent form and the information presented and that you agree to be in this study.</p></div></div>';
+            '<h5>LEARNING MORE</h5><p>If you have questions about this study, you may contact your experimenter Kimberly Wong at kww3@williams.com. If you have questions about your rights as a research participant, or you have complaints about this research, you can contact the current chair of the Williams Institutional Review Board at: ksavitsk@williams.edu.</p><h5>INFORMED CONSENT</h5><p>Your participation indicates that you have read and understood this consent form and the information presented and that you agree to be in this study.</p></div></div>';
     } else {
         var consentContent =
             "<h5>USE ARROW KEYS TO SCROLL DOWN, AND PRESS 'Y' TO CONSENT.<br>In order to run this study, we need to include the standard consent form below.</h5><h1>Consent for Participation in a Research Study</h1><div style='width: 100%; text-align: center'><div style='display: inline-block; margin: 0 auto; padding: 10px 200px 10px 200px; text-align: left'><h5>STUDY TITLE</h5><p>Perceiving Objects and Events</p>" +
@@ -97,7 +100,7 @@ function consentForm(participantType) {
             '<h5>COSTS AND COMPENSATION</h5><p>There are no costs associated with participation in this study. You will receive <strong>' +
             String(estDollars) +
             " dollars</strong> for participating.</p><h5>CONFIDENTIALITY</h5><p>No personally identifying information will be collected, so your participation will be anonymous. The survey is anonymous. We will not know your name. We will not be able to connect any identifying information to your survey answers. However, (if you are accessing this experiment through mTurk), we will know your mTurk number in order to pay you for your time. Your mTurk number could possibly be connected to your public profile, which could, in theory, be searched. We want to stress that we will not be looking at anyone's public profiles. We will keep the information about your participation in this research confidential. Your data will be pooled with those from other participants, and may be included in scientific publications and uploaded to public data repositories.</p>" +
-            '<h5>LEARNING MORE</h5><p>If you have questions about this study, you may contact your experimenter Kimberly Wong at kww3@williams.com. If you have questions about your rights as a research participant, or you have complaints about this research, you can contact the Yale Institutional Review Boards at 203-785-4688 or hrpp@yale.edu.</p><h5>INFORMED CONSENT</h5><p>Your participation indicates that you have read and understood this consent form and the information presented and that you agree to be in this study.</p></div></div>';
+            '<h5>LEARNING MORE</h5><p>If you have questions about this study, you may contact your experimenter Kimberly Wong at kww3@williams.com. If you have questions about your rights as a research participant, or you have complaints about this research, you can contact the the current chair of the Williams Institutional Review Board at: ksavitsk@williams.edu.</p><h5>INFORMED CONSENT</h5><p>Your participation indicates that you have read and understood this consent form and the information presented and that you agree to be in this study.</p></div></div>';
     }
     return consentContent;
 }

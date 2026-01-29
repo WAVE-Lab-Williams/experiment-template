@@ -168,4 +168,5 @@ uv.lock
 
 # data folders
 tools/data/*
+!.gitkeep
 temp/

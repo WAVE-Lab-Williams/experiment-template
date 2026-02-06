@@ -138,6 +138,8 @@ var id = {
                 workerID = respObj[key];
             }
         } /*end of for loop*/
+        // Retroactively update all prior trials with the finalized workerID
+        jsPsych.data.get().addToAll({participant_id: workerID});
     } /*end of on_finish*/,
 }; /* end of id*/
 

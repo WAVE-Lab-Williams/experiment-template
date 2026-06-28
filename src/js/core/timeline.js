@@ -222,31 +222,18 @@ EXPERIMENT SECTION (*sec_expt)
 */
 
 /* -------- defining factors && exptdesign (*factors) --------*/
-
-var poss_circle_colors = ["blue","orange"];
-var poss_disp_duration = [200, 500];
+// The stimuli and durations shown in the main experiment. Edit these freely.
+var possible_circle_colors = ["blue", "orange"];
+var possible_display_durations = [200, 500];
 
 var factors = {
-    circle_color: poss_circle_colors,
-    disp_duration: poss_disp_duration
-}
-
-var full_design = jsPsych.randomization.factorial(factors, 1);
-console.log(full_design);
+    circle_color: possible_circle_colors,
+    display_duration: possible_display_durations,
+};
 
 /* -------  Set Preload Images for Expt (*preload_expt) -------------- */
-for (var i = 0; i < poss_circle_colors.length; i++) {
-    forPreload.push(`${stimFolder}${poss_circle_colors[i]}-circle.png`);
-}
-
-/* ------- timeline expt push (*pushExpt ) -------------- */
-for (var elem = 0; elem < full_design.length; elem++) {
-    runSingleTrial(
-        full_design[elem].circle_color,
-        full_design[elem].disp_duration,
-        timelineexpt,
-        'expt',
-    );
+for (var i = 0; i < possible_circle_colors.length; i++) {
+    forPreload.push(`${stimFolder}${possible_circle_colors[i]}-circle.png`);
 }
 
 /*
@@ -309,17 +296,42 @@ Run Expt (*sec_run)
 ===============================================================
 */
 
-if (runPreload) {
-    var preload = {
-        type: jsPsychPreload,
-        images: forPreload,
+// The experiment can pull a few settings from the WAVE backend (e.g. how many
+// times to repeat the trial design). Because that's a network request, we wait
+// for it here, then build the trials and start. Everything above this point is
+// plain and editable by hand -- only this run step needs to be async.
+async function startExperiment() {
+
+    // 1) Resolve settings: this experiment's backend config merged over the
+    //    defaults in params.js (falls back to the defaults if WAVE is offline).
+    var config = window.waveClient
+        ? await window.waveClient.getConfig()
+        : EXPERIMENT_CONFIG_DEFAULTS;
+
+    // Save the exact settings used onto every data row, for the record.
+    jsPsych.data.addProperties({ experiment_config: JSON.stringify(config) });
+
+    // 2) Build the main experiment trials. number_of_repetitions controls how
+    //    many times the full design repeats (i.e. the number of main trials).
+    var full_design = jsPsych.randomization.factorial(factors, config.number_of_repetitions);
+    console.log('Running ' + full_design.length + ' main trials.');
+    for (var t = 0; t < full_design.length; t++) {
+        runSingleTrial(full_design[t].circle_color, full_design[t].display_duration, timelineexpt, 'expt');
     }
-    timelinebase = timelinebase.concat(preload);
+
+    // 3) Assemble the timeline (toggle sections with the run* flags in params.js).
+    if (runPreload) {
+        var preload = { type: jsPsychPreload, images: forPreload };
+        timelinebase = timelinebase.concat(preload);
+    }
+    if (runIntro) { timelinebase = timelinebase.concat(timelineintro) }
+    if (runInstr) { timelinebase = timelinebase.concat(timelineinstr) }
+    if (runExpt) { timelinebase = timelinebase.concat(timelineexpt) }
+    if (runClose) { timelinebase = timelinebase.concat(timelineclose) }
+
+    // 4) Go!
+    jsPsych.run(timelinebase);
 }
 
-if (runIntro) { timelinebase = timelinebase.concat(timelineintro) }
-if (runInstr) { timelinebase = timelinebase.concat(timelineinstr) }
-if (runExpt) { timelinebase = timelinebase.concat(timelineexpt) }
-if (runClose) { timelinebase = timelinebase.concat(timelineclose) }
-
-jsPsych.run(timelinebase);
+// Start once the page (and the WAVE client module) have loaded.
+window.addEventListener('DOMContentLoaded', startExperiment);

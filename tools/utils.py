@@ -232,8 +232,15 @@ async def create_experiment(
     researcher_api_key: str,
     wave_backend_url: str,
     additional_data: Optional[Dict[str, Any]] = None,
+    config: Optional[Dict[str, Any]] = None,
 ) -> Dict[str, Any]:
-    """Create an experiment with the given parameters."""
+    """Create an experiment with the given parameters.
+
+    `config` holds free-form experiment hyperparameters (sample ratios,
+    randomization probabilities, trial counts, timing, ...) that the experiment
+    frontend pulls at runtime and merges over its in-code defaults. Omit it to
+    let the frontend use its defaults.
+    """
     async with WaveClient(api_key=researcher_api_key, base_url=wave_backend_url) as client:
         try:
             if additional_data is None:
@@ -244,6 +251,7 @@ async def create_experiment(
                 description=description,
                 tags=tags,
                 additional_data=additional_data,
+                config=config or {},
             )
             return experiment
 

@@ -12,6 +12,26 @@ var runExpt = true;
 var runClose = true;
 var runPreload = true;
 
+/*
+---------------------------------------------------------------
+Tunable experiment hyperparameters (DEFAULTS)
+---------------------------------------------------------------
+A small set of experiment "knobs" with their DEFAULT values. These defaults are
+used when running locally, or when an experiment has no backend config set. At
+runtime the experiment pulls this experiment's `config` from the WAVE backend
+(if available) and merges it OVER these defaults (see initExperiment() in
+timeline.js) — so a researcher can change a knob by updating the experiment
+record (via the setup notebook / API) instead of editing this file.
+
+Kept deliberately small: start with the one knob you actually need to tune. To
+expose another, add it here and read it from the resolved config in timeline.js.
+*/
+var EXPERIMENT_CONFIG_DEFAULTS = {
+    // How many times the full factorial design repeats -> controls the number of
+    // main experiment trials. (Previously hardcoded as factorial(factors, 1).)
+    number_of_repetitions: 1,
+};
+
 // Defining Core Variables that remain constant
 var PRESTIM_DISP_TIME = 800;
 var FIXATION_DISP_TIME = 500;

@@ -313,7 +313,10 @@ async function startExperiment() {
 
     // 2) Build the main experiment trials. number_of_repetitions controls how
     //    many times the full design repeats (i.e. the number of main trials).
-    var full_design = jsPsych.randomization.factorial(factors, config.number_of_repetitions);
+    //    Config numbers arrive as floats, so read it as a whole number — see the
+    //    asInteger/asNumber/... helpers in src/js/utils/standard-functions.js.
+    var n_reps = asInteger(config.number_of_repetitions, EXPERIMENT_CONFIG_DEFAULTS.number_of_repetitions);
+    var full_design = jsPsych.randomization.factorial(factors, n_reps);
     console.log('Running ' + full_design.length + ' main trials.');
     for (var t = 0; t < full_design.length; t++) {
         runSingleTrial(full_design[t].circle_color, full_design[t].display_duration, timelineexpt, 'expt');

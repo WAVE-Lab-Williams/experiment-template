@@ -222,20 +222,25 @@ EXPERIMENT SECTION (*sec_expt)
 */
 
 /* -------- defining factors && exptdesign (*factors) --------*/
-// Expt variables that are able to change via config, default set in params.js
-var possible_circle_colors = asList(config.base_circle_colors, CONFIG_DEFAULTS.base_circle_colors);
+// Note: `config` itself isn't resolved until startExperiment() awaits the WAVE
+// backend (*sec_run below), so this just defines how to build `factors` --
+// it's called from startExperiment() once config is actually available.
+function buildExptFactors(config) {
+    // Expt variables that are not able to change (without PR)
+    var possible_display_durations = [200, 500];
 
-// Expt variables that are not able to change (without PR)
-var possible_display_durations = [200, 500];
+    // Expt variables that ARE able to change via config, default set in params.js.
+    var possible_circle_colors = asList(config.base_circle_colors, CONFIG_DEFAULTS.base_circle_colors);
 
-var factors = {
-    circle_color: possible_circle_colors,
-    display_duration: possible_display_durations,
-};
+    /* -------  Set Preload Images for Expt (*preload_expt) -------------- */
+    for (var i = 0; i < possible_circle_colors.length; i++) {
+        forPreload.push(`${stimFolder}${possible_circle_colors[i]}-circle.png`);
+    }
 
-/* -------  Set Preload Images for Expt (*preload_expt) -------------- */
-for (var i = 0; i < possible_circle_colors.length; i++) {
-    forPreload.push(`${stimFolder}${possible_circle_colors[i]}-circle.png`);
+    return {
+        circle_color: possible_circle_colors,
+        display_duration: possible_display_durations, 
+    };
 }
 
 /*
@@ -313,6 +318,10 @@ async function startExperiment() {
     // Save the exact settings used onto every data row, for the record.
     jsPsych.data.addProperties({ experiment_config: JSON.stringify(config) });
 
+    // Now that config is resolved, build the factors it controls (see
+    // buildExptFactors() in *sec_expt above).
+    var factors = buildExptFactors(config);
+
     // Build the main experiment trials. number_of_repetitions controls how
     //    many times the full design repeats (i.e. the number of main trials).
     //    Config numbers arrive as floats, so read it as a whole number — see the
@@ -320,12 +329,13 @@ async function startExperiment() {
     var n_reps = asInteger(config.number_of_repetitions, CONFIG_DEFAULTS.number_of_repetitions);
     var full_design = jsPsych.randomization.factorial(factors, n_reps);
     console.log('Running ' + full_design.length + ' main trials.');
+    console.log(full_design);
+
     for (var t = 0; t < full_design.length; t++) {
         runSingleTrial(full_design[t].circle_color, full_design[t].display_duration, timelineexpt, 'expt');
     }
 
     // Assemble the timeline (toggle sections with the run* flags in params.js).
-    console.log(forPreload);
     if (runPreload) {
         var preload = {
             type: jsPsychPreload,
@@ -334,6 +344,9 @@ async function startExperiment() {
             show_detailed_errors: true,
             on_error: function(file) {
                 console.log('Error: ',file);
+            },
+            on_success: function(file) {
+                console.log('Success: ',file);
             },
             message: 'Please wait while the experiment loads...'
         }

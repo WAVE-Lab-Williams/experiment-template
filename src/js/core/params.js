@@ -26,10 +26,9 @@ record (via the setup notebook / API) instead of editing this file.
 Kept deliberately small: start with the one knob you actually need to tune. To
 expose another, add it here and read it from the resolved config in timeline.js.
 */
-var EXPERIMENT_CONFIG_DEFAULTS = {
-    // How many times the full factorial design repeats -> controls the number of
-    // main experiment trials. (Previously hardcoded as factorial(factors, 1).)
+var CONFIG_DEFAULTS = {
     number_of_repetitions: 1,
+    base_circle_colors: ["blue","orange"],
 };
 
 // Defining Core Variables that remain constant

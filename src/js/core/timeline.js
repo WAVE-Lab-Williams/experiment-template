@@ -222,8 +222,10 @@ EXPERIMENT SECTION (*sec_expt)
 */
 
 /* -------- defining factors && exptdesign (*factors) --------*/
-// The stimuli and durations shown in the main experiment. Edit these freely.
-var possible_circle_colors = ["blue", "orange"];
+// Expt variables that are able to change via config, default set in params.js
+var possible_circle_colors = asList(config.base_circle_colors, CONFIG_DEFAULTS.base_circle_colors);
+
+// Expt variables that are not able to change (without PR)
 var possible_display_durations = [200, 500];
 
 var factors = {
@@ -302,27 +304,27 @@ Run Expt (*sec_run)
 // plain and editable by hand -- only this run step needs to be async.
 async function startExperiment() {
 
-    // 1) Resolve settings: this experiment's backend config merged over the
+    // Resolve settings: this experiment's backend config merged over the
     //    defaults in params.js (falls back to the defaults if WAVE is offline).
     var config = window.waveClient
         ? await window.waveClient.getConfig()
-        : EXPERIMENT_CONFIG_DEFAULTS;
+        : CONFIG_DEFAULTS;
 
     // Save the exact settings used onto every data row, for the record.
     jsPsych.data.addProperties({ experiment_config: JSON.stringify(config) });
 
-    // 2) Build the main experiment trials. number_of_repetitions controls how
+    // Build the main experiment trials. number_of_repetitions controls how
     //    many times the full design repeats (i.e. the number of main trials).
     //    Config numbers arrive as floats, so read it as a whole number — see the
     //    asInteger/asNumber/... helpers in src/js/utils/standard-functions.js.
-    var n_reps = asInteger(config.number_of_repetitions, EXPERIMENT_CONFIG_DEFAULTS.number_of_repetitions);
+    var n_reps = asInteger(config.number_of_repetitions, CONFIG_DEFAULTS.number_of_repetitions);
     var full_design = jsPsych.randomization.factorial(factors, n_reps);
     console.log('Running ' + full_design.length + ' main trials.');
     for (var t = 0; t < full_design.length; t++) {
         runSingleTrial(full_design[t].circle_color, full_design[t].display_duration, timelineexpt, 'expt');
     }
 
-    // 3) Assemble the timeline (toggle sections with the run* flags in params.js).
+    // Assemble the timeline (toggle sections with the run* flags in params.js).
     if (runPreload) {
         var preload = { type: jsPsychPreload, images: forPreload };
         timelinebase = timelinebase.concat(preload);
@@ -332,7 +334,6 @@ async function startExperiment() {
     if (runExpt) { timelinebase = timelinebase.concat(timelineexpt) }
     if (runClose) { timelinebase = timelinebase.concat(timelineclose) }
 
-    // 4) Go!
     jsPsych.run(timelinebase);
 }
 

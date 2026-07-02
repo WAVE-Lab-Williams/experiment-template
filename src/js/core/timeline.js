@@ -223,24 +223,31 @@ EXPERIMENT SECTION (*sec_expt)
 
 /* -------- defining factors && exptdesign (*factors) --------*/
 // Note: `config` itself isn't resolved until startExperiment() awaits the WAVE
-// backend (*sec_run below), so this just defines how to build `factors` --
+// backend (*sec_run below), so this just defines how to build `factors` and creates `factorial_design` --
 // it's called from startExperiment() once config is actually available.
-function buildExptFactors(config) {
+function buildExptDesign(config) {
     // Expt variables that are not able to change (without PR)
     var possible_display_durations = [200, 500];
 
     // Expt variables that ARE able to change via config, default set in params.js.
+    //      Config numbers arrive as floats, so make sure to read in correctly asInteger/asNumber
+    //      see the helpers in src/js/utils/standard-functions.js.
     var possible_circle_colors = asList(config.base_circle_colors, CONFIG_DEFAULTS.base_circle_colors);
+    var n_reps = asInteger(config.number_of_repetitions, CONFIG_DEFAULTS.number_of_repetitions);
+    
+    // Build the main experiment trials, including both types of expt variables
+    var factors = {
+        circle_color: possible_circle_colors,
+        display_duration: possible_display_durations, 
+    };
+    var factorial_design = jsPsych.randomization.factorial(factors, n_reps);
 
     /* -------  Set Preload Images for Expt (*preload_expt) -------------- */
     for (var i = 0; i < possible_circle_colors.length; i++) {
         forPreload.push(`${stimFolder}${possible_circle_colors[i]}-circle.png`);
     }
 
-    return {
-        circle_color: possible_circle_colors,
-        display_duration: possible_display_durations, 
-    };
+    return factorial_design;
 }
 
 /*
@@ -319,15 +326,8 @@ async function startExperiment() {
     jsPsych.data.addProperties({ experiment_config: JSON.stringify(config) });
 
     // Now that config is resolved, build the factors it controls (see
-    // buildExptFactors() in *sec_expt above).
-    var factors = buildExptFactors(config);
-
-    // Build the main experiment trials. number_of_repetitions controls how
-    //    many times the full design repeats (i.e. the number of main trials).
-    //    Config numbers arrive as floats, so read it as a whole number — see the
-    //    asInteger/asNumber/... helpers in src/js/utils/standard-functions.js.
-    var n_reps = asInteger(config.number_of_repetitions, CONFIG_DEFAULTS.number_of_repetitions);
-    var full_design = jsPsych.randomization.factorial(factors, n_reps);
+    // buildExptDesign() in *sec_expt above).
+    var full_design = buildExptDesign(config);
     console.log('Running ' + full_design.length + ' main trials.');
     console.log(full_design);
 

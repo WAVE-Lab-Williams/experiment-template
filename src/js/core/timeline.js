@@ -325,8 +325,18 @@ async function startExperiment() {
     }
 
     // Assemble the timeline (toggle sections with the run* flags in params.js).
+    console.log(forPreload);
     if (runPreload) {
-        var preload = { type: jsPsychPreload, images: forPreload };
+        var preload = {
+            type: jsPsychPreload,
+            images: forPreload,
+            auto_preload: true,
+            show_detailed_errors: true,
+            on_error: function(file) {
+                console.log('Error: ',file);
+            },
+            message: 'Please wait while the experiment loads...'
+        }
         timelinebase = timelinebase.concat(preload);
     }
     if (runIntro) { timelinebase = timelinebase.concat(timelineintro) }

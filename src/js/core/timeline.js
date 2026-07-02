@@ -110,7 +110,7 @@ if (workerID === 'no_query') {
 if (workerID !== 'no_query') {
     console.log('Worker singID captured from URL:', workerID);
 } else {
-    workerID = 'no_query_worker'+ Math.floor(Math.random() * 90000) + 10000;
+    workerID = 'no_query_worker'+ Math.floor(Math.random() * 90000 + 10000);
     console.warn('⚠️ No participant ID found in URL - randomly generated:', workerID);
 }
 

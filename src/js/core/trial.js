@@ -73,7 +73,7 @@ function runSingleTrial(
 
     var dispCircle = {
         type: jsPsychHtmlKeyboardResponse,
-        stimulus: `<img src="${thisStim}" style="width: ${imgWidth}px;"`,
+        stimulus: `<img src="${thisStim}" style="width: ${imgWidth}px;" />`,
         choices: ['f', 'j'],
         stimulus_duration: stimDuration, // only use stimulus_duration when you want the image on screen display to be desynced from the trial_duration, will go hidden after this time.
         trial_duration: null, // most of the time, you will have trial_duration set to the display time, and no stimulus duration at all.

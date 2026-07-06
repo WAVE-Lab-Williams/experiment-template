@@ -72,19 +72,18 @@ function runSingleTrial(
     }; // dispCircle end
 
     var dispCircle = {
-        type: jsPsychImageKeyboardResponse,
-        stimulus: thisStim,
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: `<img src="${thisStim}" style="width: ${imgWidth}px;" />`,
         choices: ['f', 'j'],
-        stimulus_height: imgHeight,
-        stimulus_duration: stimDuration,
-        trial_duration: null,
+        stimulus_duration: stimDuration, // only use stimulus_duration when you want the image on screen display to be desynced from the trial_duration, will go hidden after this time.
+        trial_duration: null, // most of the time, you will have trial_duration set to the display time, and no stimulus duration at all.
         response_ends_trial: true,
         prompt: `${persistent_prompt}`,
         data: {
             trial_category: 'answer'+trialType,
             trial_stimulus: thisStim,
-            trial_duration: stimDuration,
-            correct_response: function(){
+            trial_duration: stimDuration, // you only need to include this line to overlay trial_duration if stimulus_duration is different than trial_duration, and you actually want to record stimulus_duration
+            correct_response: function(){ 
                 if (stimColor === 'blue') {
                     return 'f';
                 } else if (stimColor === 'orange') {

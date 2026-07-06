@@ -14,22 +14,21 @@ var runPreload = true;
 
 /*
 ---------------------------------------------------------------
-Tunable experiment hyperparameters (DEFAULTS)
+Live tunable experiment hyperparameters (Sets Defaults)
 ---------------------------------------------------------------
-A small set of experiment "knobs" with their DEFAULT values. These defaults are
-used when running locally, or when an experiment has no backend config set. At
-runtime the experiment pulls this experiment's `config` from the WAVE backend
-(if available) and merges it OVER these defaults (see initExperiment() in
-timeline.js) — so a researcher can change a knob by updating the experiment
-record (via the setup notebook / API) instead of editing this file.
+Sets default DEFAULT values for adjustable experiment variables that may
+later need to change while the experiment is still live.  
+These defaults are used when running locally, or when an 
+experiment has no backend config set. At runtime, the experiment pulls `config` 
+from the WAVE backend (if available) and merges it OVER these defaults 
+(see initExperiment() in timeline.js). A researcher can thus easily change
+a one of these variables (via the setup_experiment.ipynb notebook / API)
+instead of having to edit the file and do PRs.
 
-Kept deliberately small: start with the one knob you actually need to tune. To
-expose another, add it here and read it from the resolved config in timeline.js.
 */
-var EXPERIMENT_CONFIG_DEFAULTS = {
-    // How many times the full factorial design repeats -> controls the number of
-    // main experiment trials. (Previously hardcoded as factorial(factors, 1).)
+var CONFIG_DEFAULTS = {
     number_of_repetitions: 1,
+    base_circle_colors: ["blue","orange"],
 };
 
 // Defining Core Variables that remain constant

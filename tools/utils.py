@@ -3,7 +3,9 @@ Utility functions for the WAVE experiment setup notebook.
 """
 
 import os
+import re
 import sys
+import difflib
 import time
 import threading
 import http.server
@@ -317,6 +319,95 @@ def get_user_confirmation(prompt: str, exit_message: Optional[str] = None) -> bo
             sys.exit("User cancelled")
         return False
     return True
+
+
+PARAMS_JS_PATH: Path = Path(__file__).resolve().parent.parent / "src" / "js" / "core" / "params.js"
+
+
+def get_config_default_keys(params_path: Path = PARAMS_JS_PATH) -> List[str]:
+    """Return the top-level key names of `var CONFIG_DEFAULTS = {...}` in params.js.
+
+    This is a lightweight scanner, not a full JS parser. It handles flat values,
+    lists, nested objects, strings and comments, which covers normal
+    CONFIG_DEFAULTS usage. Keys nested inside a value are ignored.
+    """
+    text: str = Path(params_path).read_text(encoding="utf-8")
+    start = re.search(r"CONFIG_DEFAULTS\s*=\s*\{", text)
+    if not start:
+        raise RuntimeError(f"Couldn't find `CONFIG_DEFAULTS = {{` in {params_path}")
+
+    keys: List[str] = []
+    depth: int = 1
+    expecting_key: bool = True  # True right after `{` or a top-level `,`
+    i: int = start.end()
+    n: int = len(text)
+    key_pattern = re.compile(r"""\s*(["']?)([A-Za-z_$][\w$]*)\1\s*:""")
+
+    while i < n and depth > 0:
+        ch = text[i]
+        # Skip comments
+        if text.startswith("//", i):
+            nl = text.find("\n", i)
+            i = n if nl == -1 else nl
+            continue
+        if text.startswith("/*", i):
+            end = text.find("*/", i + 2)
+            i = n if end == -1 else end + 2
+            continue
+        # Top-level key
+        if depth == 1 and expecting_key:
+            m = key_pattern.match(text, i)
+            if m:
+                keys.append(m.group(2))
+                expecting_key = False
+                i = m.end()
+                continue
+        # Skip string values so brackets/commas inside them don't count
+        if ch in "\"'`":
+            j = i + 1
+            while j < n and text[j] != ch:
+                j += 2 if text[j] == "\\" else 1
+            i = j + 1
+            continue
+        if ch in "{[":
+            depth += 1
+        elif ch in "}]":
+            depth -= 1
+        elif ch == "," and depth == 1:
+            expecting_key = True
+        i += 1
+
+    if depth != 0:
+        raise RuntimeError(f"Couldn't find the end of CONFIG_DEFAULTS in {params_path}")
+    return keys
+
+
+def check_config_keys(config: Dict[str, Any], params_path: Path = PARAMS_JS_PATH) -> Dict[str, Any]:
+    """Make sure every key in `config` exists in CONFIG_DEFAULTS in params.js.
+
+    Raises ValueError (so nothing gets sent to the backend) if any key is
+    unknown, e.g. a typo. Returns `config` unchanged if everything matches.
+    """
+    valid: List[str] = get_config_default_keys(params_path)
+    bad: List[str] = [k for k in config if k not in valid]
+
+    if bad:
+        lines: List[str] = []
+        for k in bad:
+            close = difflib.get_close_matches(k, valid, n=1)
+            hint = f" (did you mean '{close[0]}'?)" if close else ""
+            lines.append(f"  - '{k}'{hint}")
+        raise ValueError(
+            "❌ These config keys aren't in CONFIG_DEFAULTS in params.js:\n"
+            + "\n".join(lines)
+            + f"\nValid keys are: {valid}\nNothing was sent to the backend."
+        )
+
+    missing: List[str] = [k for k in valid if k not in config]
+    print(f"✅ All config keys match CONFIG_DEFAULTS in params.js: {list(config)}")
+    if missing:
+        print(f"⚠️  Not set, so the params.js defaults will be used: {missing}")
+    return config
 
 
 def print_schema_info() -> None:
